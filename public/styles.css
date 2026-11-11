@@ -188,6 +188,168 @@ html {
   color: var(--on-navy-soft);
 }
 
+/* ---- Ramy ---- */
+
+#view-roadmap > .ramy-hero {
+  max-width: 1280px;
+  margin: 1.5rem auto;
+  padding-inline: var(--space);
+}
+
+.ramy {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.ramy-hero {
+  /* Ramy (button + label) on the left, the bubble to his right. */
+  display: grid;
+  grid-template-columns: auto minmax(0, 420px);
+  grid-template-rows: auto auto;
+  column-gap: 0.875rem;
+  justify-content: start;
+}
+
+.ramy-hero .ramy-button {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+}
+
+.ramy-hero .ramy-label {
+  grid-column: 1;
+  grid-row: 2;
+  text-align: center;
+  /* Wider than Ramy but with negative side margins, so it wraps on two lines and
+     overflows centred without widening his column (the bubble stays close to him). */
+  width: max-content;
+  max-width: 9rem;
+  margin-inline: -2.5rem;
+}
+
+.ramy-hero .ramy-bubble {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  margin-top: 1rem;
+  animation: ramy-float 4s ease-in-out infinite;
+}
+
+.ramy-news {
+  justify-content: flex-start;
+}
+
+.ramy-img {
+  display: block;
+  height: 120px;
+  width: auto;
+}
+
+.ramy-small {
+  height: 96px;
+}
+
+.ramy-button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  animation: pop-in 400ms ease-out both, ramy-bob 3s ease-in-out 400ms infinite;
+}
+
+.ramy-label {
+  margin: 0;
+  font-family: var(--pixel-font);
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+/* Comic bubble: the tail is two triangles, a navy one behind a card-tint one,
+   so the 2px border continues around it. */
+.ramy-bubble {
+  position: relative;
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  background: var(--surface);
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--navy);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.ramy-bubble::before,
+.ramy-bubble::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  border-style: solid;
+  border-color: transparent;
+}
+
+.ramy-bubble::before {
+  left: -12px;
+  border-width: 9px 10px 9px 0;
+  border-right-color: var(--navy);
+}
+
+.ramy-bubble::after {
+  left: -9px;
+  border-width: 8px 9px 8px 0;
+  border-right-color: var(--surface);
+}
+
+.ramy-bubble:empty {
+  display: none;
+}
+
+.upcoming-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@keyframes ramy-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+@keyframes ramy-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@media (max-width: 599px) {
+  .ramy-hero {
+    column-gap: 0.75rem;
+  }
+
+  /* A narrow label column leaves room for the bubble: no horizontal page scroll. */
+  .ramy-hero .ramy-label {
+    max-width: 6rem;
+    margin-inline: -1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .ramy-img {
+    height: 96px;
+  }
+}
+
 #milestone-error {
   max-width: var(--max-width);
   margin: var(--space) auto 0;
@@ -766,6 +928,9 @@ button.primary:disabled {
     transition: none;
   }
 
+  .ramy-button,
+  .ramy-bubble,
+  .ramy-img,
   .node-shape,
   .popover {
     animation: none;

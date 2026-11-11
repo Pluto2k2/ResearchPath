@@ -30,8 +30,8 @@ laptop or phone; accounts come later.
 | **US-03** As a PhD student, I want to add conferences, seminars, submission deadlines and funding calls, and see everything due in the next 30 days with my milestones, so that I never miss a date. | Delivered | [M06](docs/missions/M06-events-next-30-days.md) | [#9](https://github.com/Pluto2k2/ResearchPath/pull/9) | [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) |
 | **US-04** As a PhD student, I want a daily digest of new papers on my topics (from arXiv / OpenAlex), so that I keep up with my field without searching every day. *(delivered as an on-demand tab, not a daily digest)* | Delivered | [M09](docs/missions/M09-research-news.md) | [#13](https://github.com/Pluto2k2/ResearchPath/pull/13) | [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) |
 | **US-05** As a PhD student, I want a board of events and opportunities (funding, positions, visibility) picked by my interests, so that I find chances I would otherwise miss. | Next | — | — | planned v0.2 |
-| **US-06** As a PhD student, I want to share a paper draft with peers I invite and be notified when they leave feedback, so that I get feedback in days, not weeks. | Next (needs accounts) | — | — | planned v0.3 |
-| **US-07** As a PhD student, I want my own account, so that my roadmap is private and available on any device. | Next | — | — | planned v0.3 |
+| **US-06** As a PhD student, I want to share a paper draft with peers I invite and be notified when they leave feedback, so that I get feedback in days, not weeks. | Next (needs accounts) | — | — | planned later |
+| **US-07** As a PhD student, I want my own account, so that my roadmap is private and available on any device. | Next | — | — | planned later |
 
 **Status and progress (US-02, M05):** each milestone has a status (`todo`, `doing`, `done`, `blocked`),
 set from the milestone's detail popover on the roadmap. Each node shows its status shape and name,
@@ -54,6 +54,12 @@ from OpenAlex for the last 365 days. It is on demand, not a daily digest.
 - `GET /api/news/papers?categories=cs.AI,cs.LG&q=keyword` returns up to 20 papers from the arXiv API, newest first. Requests to arXiv are spaced at least 3 seconds apart.
 - `GET /api/news/topics?categories=...&q=...` returns the top 10 OpenAlex topics with their counts.
 - At least one of `categories` or `q` is required. Both endpoints are cached on the server for 30 minutes. When an upstream API fails or times out, the endpoint returns `502` with a message.
+
+**Ramy, your research guide buddy (M11, release v0.3.0, in review):** a mascot standing above the roadmap, with a floating speech bubble.
+His speech bubble says the most useful thing right now: an overdue milestone, a deadline within 7 days, a progress
+step (25, 50, 75 or 100 %), or a tip. Clicking Ramy shows the next message. He reacts to a finished milestone, to an
+empty next-30-days list, and to the Research news tab (loading, errors, hot topics unavailable). Mission:
+[M11](docs/missions/M11-ramy-mascot.md). PR: [TODO: link after push].
 
 Full scope: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
@@ -171,12 +177,15 @@ team of specialised subagents, under human review at every step.
 | M06 Events and next 30 days | 300 | 16 |
 | M09 Research news | 482 | 23 |
 | M10 Hardening (v0.2.1) | 547 | 30 |
+| M11 Ramy mascot (v0.3.0) | 638 | 33 |
 
 M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAlex) and use a fake clock.
 
 - **Reviews:** M04b's must fix (no popover tests) was fixed with happy-dom tests. M05 had 1 must fix (a corrupted
-  check-mark glyph), fixed and tested; M06 and M07 had no must fix. M09 had 2 must fix and 6 should fix, all fixed. M10 had no must fix and 4 should fix, all fixed.
+  check-mark glyph), fixed and tested; M06 and M07 had no must fix. M09 had 2 must fix and 6 should fix, all fixed. M10 had no must fix and 4 should fix, all fixed. M11 had no must fix and 5 should fix, all fixed.
 - **Dependencies approved by the human:** `@eslint/js` and `globals` (M02), `happy-dom` (M04b), `fast-xml-parser` (M09).
+
+The Ramy sprite sheet was created by me with an AI image generator.
 
 **What worked well**
 
@@ -212,8 +221,9 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 | M08 Final README | done |
 | M09 US-04 Research news tab (release v0.2.0) | done |
 | M10 Hardening for the public site (release v0.2.1) | done |
+| M11 Ramy, your research guide buddy (release v0.3.0) | in review |
 
-**Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
+**Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (later) arrive.
 
 - **Data loss:** the SQLite data is lost on every redeploy, restart or spin-down.
 - **Cold start:** the free plan spins down when idle, so the first request can take a while.
@@ -226,4 +236,4 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 
 The full list of items deferred from reviews is in [`docs/missions/README.md`](docs/missions/README.md).
 
-**Next:** backlog US-05 events and opportunities board (v0.2); US-06 and US-07 (v0.3); and the hardening items in [`docs/missions/README.md`](docs/missions/README.md).
+**Next:** backlog US-05 events and opportunities board (v0.2); US-06 and US-07 (later, needs accounts); US-08 email reminders from Ramy (needs US-07 accounts, design note in [`docs/mvp-scope.md`](docs/mvp-scope.md)); and the hardening items in [`docs/missions/README.md`](docs/missions/README.md).
