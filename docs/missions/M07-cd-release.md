@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) + You (GitHub, Render, release pull request) |
 | **Branch** | `ci/cd-release` |
 | **Depends on** | M06 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -71,7 +71,7 @@ Steps for these checks: [`docs/deployment.md`](../deployment.md).
   - The containers reach `healthy` with `PORT=10000` and with the default port.
   - `actionlint` on `cd.yml`: no findings.
   - Grep for secrets and token URLs in the repository: nothing found.
-- Pull request: [TODO: PR link for `ci/cd-release` -> `develop`]
+- Pull request: [#11](https://github.com/Pluto2k2/ResearchPath/pull/11); release [#12](https://github.com/Pluto2k2/ResearchPath/pull/12), tag v0.1.0
 - Real CD runs (not yet seen):
   - [TODO: URL of the first CD run on `main`, and the GHCR package link]
   - [TODO: URL of the CD run for tag `v0.1.0`]

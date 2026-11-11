@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** MVP in progress. Milestones, status and progress, and the next 30 days are built; M06 and M07 (deployment and release v0.1.0) are in review. The research news tab (v0.2.0, M09) is in review. See [Status and next steps](#status-and-next-steps).
+> **Status:** v0.2.0 released. Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -112,14 +112,16 @@ team of specialised subagents, under human review at every step.
 | M03 CI pipeline | done |
 | M04 US-01 Roadmap with milestones | done |
 | M05 US-02 Status and progress | done |
-| M06 US-03 Events and next 30 days | in review |
-| M07 CD and release v0.1.0 | in review |
+| M06 US-03 Events and next 30 days | done |
+| M07 CD and release v0.1.0 | done |
 | M08 Final README | todo |
-| M09 US-04 Research news tab (release v0.2.0) | in review |
+| M09 US-04 Research news tab (release v0.2.0) | done |
 
 **Known limits:** the app will be deployed on Render's free plan, which has no persistent disk:
 the SQLite data is lost on every redeploy, restart or spin-down. The live app is a demo; keep
 real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
 
-**Next:** review and merge M06 and M07 (continuous deployment and release v0.1.0, see [`docs/deployment.md`](docs/deployment.md)), then M09 (research news tab, release v0.2.0; the `package.json` version is `0.2.0`, and the tag is created after the release pull request to `main`), then M08, the final README.
+**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07) and [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09). Release steps: [`docs/deployment.md`](docs/deployment.md).
+
+**Next:** M08, the final README.
 Backlog: US-05 events and opportunities board (v0.2); US-06 and US-07 (v0.3).

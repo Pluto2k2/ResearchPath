@@ -47,7 +47,7 @@ Don't write any application code yet. Show me the files before committing.
 - Files changed: `README.md`, `CLAUDE.md`, `docs/missions/README.md`, `docs/missions/M01` to `M08`, `.claude/agents/mission-planner.md` (ownership list aligned with `CLAUDE.md`).
 - Tests added: none (documentation only).
 - Lint / tests / build: not applicable yet.
-- Pull request: [TODO: link]
+- Pull request: [#1](https://github.com/Pluto2k2/ResearchPath/pull/1)
 
 ## Review notes (filled by you)
 
