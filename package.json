@@ -1,6 +1,6 @@
 {
   "name": "researchpath",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Roadmap and 30-day agenda for PhD students",
@@ -14,7 +14,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "fast-xml-parser": "^5.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
