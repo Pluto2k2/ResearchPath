@@ -106,11 +106,11 @@ describe('US-03 rendering the Next 30 days panel', () => {
     expect(li.querySelector('.upcoming-days').textContent).toBe('2 days overdue');
   });
 
-  it('opens an event url in a new tab with rel noopener', () => {
+  it('opens an event url in a new tab with rel noopener noreferrer', () => {
     const a = renderUpcomingItem(eventItem()).querySelector('a.upcoming-title');
     expect(a.getAttribute('href')).toBe('https://icml.cc');
     expect(a.getAttribute('target')).toBe('_blank');
-    expect(a.getAttribute('rel')).toContain('noopener');
+    expect(a.getAttribute('rel')).toBe('noopener noreferrer');
   });
 
   it('has no link for an event without url or for a milestone', () => {

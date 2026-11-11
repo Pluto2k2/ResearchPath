@@ -1,4 +1,4 @@
-import { formatShortDate, isOverdue, relativeLabel } from './dates.js';
+import { formatShortDate, milestoneOverdue, milestoneRelativeLabel } from './dates.js';
 import { STATUS_LABELS, STATUS_VALUES, statusClass, statusLabel } from './status.js';
 import {
   MID,
@@ -173,8 +173,8 @@ function fillDetail(d, milestone, today) {
   d.milestone = milestone;
   d.title.textContent = milestone.title;
   d.date.textContent = milestone.targetDate;
-  d.relative.textContent = relativeLabel(milestone.targetDate, today);
-  d.relative.classList.toggle('is-overdue', isOverdue(milestone.targetDate, today));
+  d.relative.textContent = milestoneRelativeLabel(milestone, today);
+  d.relative.classList.toggle('is-overdue', milestoneOverdue(milestone, today));
   const hasNotes = typeof milestone.notes === 'string' && milestone.notes !== '';
   d.notes.textContent = hasNotes ? milestone.notes : '';
   d.notes.hidden = !hasNotes;
@@ -213,9 +213,9 @@ function placeNode(button, x, gap, i) {
 }
 
 function buildMilestoneNode(milestone, i, gap, today) {
-  const rel = relativeLabel(milestone.targetDate, today);
+  const rel = milestoneRelativeLabel(milestone, today);
   const short = formatShortDate(milestone.targetDate);
-  const overdue = isOverdue(milestone.targetDate, today);
+  const overdue = milestoneOverdue(milestone, today);
   const button = el('button', `node-btn${overdue ? ' is-overdue' : ''}`);
   button.type = 'button';
   button.setAttribute('aria-label', `${milestone.title}, ${short}, ${rel}, ${statusLabel(milestone.status)}`);

@@ -44,7 +44,7 @@ export function renderUpcomingItem(item) {
     const a = el('a', 'upcoming-title', item.title);
     a.href = item.url;
     a.target = '_blank';
-    a.rel = 'noopener';
+    a.rel = 'noopener noreferrer';
     li.append(a);
   } else {
     li.append(el('span', 'upcoming-title', item.title));

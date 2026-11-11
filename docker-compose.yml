@@ -3,6 +3,12 @@ services:
     build:
       context: .
       target: dev
+    # Reaps child processes and forwards SIGTERM/SIGINT to node
+    init: true
+    # Optional local settings; the file may be absent
+    env_file:
+      - path: .env
+        required: false
     ports:
       - "3000:3000"
     volumes:
