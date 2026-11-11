@@ -16,5 +16,14 @@ export function openDatabase(path) {
     status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','doing','done','blocked')),
     created_at TEXT NOT NULL
   )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('conference','seminar','deadline','funding')),
+    date TEXT NOT NULL,
+    url TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL
+  )`);
   return db;
 }

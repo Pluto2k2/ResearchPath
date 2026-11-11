@@ -6,7 +6,7 @@
 | **Owner** | Agent team (`/mission`): frontend-dev for `public/**`, test-writer for `tests/**`, docs-writer for the "UI design rules" section of CLAUDE.md and the docs, devops-engineer for the happy-dom dev dependency and the ESLint config |
 | **Branch** | `feature/ui-polish` |
 | **Depends on** | M04 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 

@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** planning. No application code yet. See [Status and next steps](#status-and-next-steps).
+> **Status:** MVP in progress. Milestones, status and progress, and the next 30 days are built; M06 is in review. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -32,11 +32,22 @@ laptop or phone; accounts come later.
 | US-06 | As a PhD student, I want to share a paper draft with peers I invite and be notified when they leave feedback, so that I get feedback in days, not weeks. | Backlog (v0.3, needs accounts) | — |
 | US-07 | As a PhD student, I want my own account, so that my roadmap is private and available on any device. | Backlog (v0.3) | — |
 
+**Status and progress (US-02, M05):** each milestone has a status (`todo`, `doing`, `done`, `blocked`),
+set from the milestone's detail popover on the roadmap. Each node shows its status shape and name,
+and the Progress section shows "X of Y milestones done (Z%)" with the count per status.
+
+- `PATCH /api/milestones/:id/status` with `{ "status": "<value>" }` returns the updated milestone. An unknown status returns `400`, an unknown or non-numeric id returns `404`.
+- `GET /api/progress` returns `{ total, done, percent, byStatus }`; `percent` is `done / total * 100`, rounded, and `0` with no milestones.
+
+**Events and next 30 days (US-03, M06):** the Upcoming section lists the milestones not `done` dated from today to today + 30 days, and the events dated from today to today + 30 days, earliest first. Milestones not `done` that are overdue come first and are flagged. Events are added from the "+ Event" form in that card: a type (`conference`, `seminar`, `deadline` or `funding`), a date, and optionally a link and notes.
+
+- `POST /api/events` with `{ "title", "type", "date", "url"?, "notes"? }` returns `201` with the created event. Invalid input returns `400` with a message naming the field; a `url` must start with `http://` or `https://`.
+- `GET /api/events` returns all events, earliest date first.
+- `GET /api/upcoming` returns the milestones not `done` dated from today to today + 30 days, the overdue milestones not `done` (listed first, `overdue: true`), and the events dated from today to today + 30 days (both ends included). Each item has `kind`, `daysLeft` and `overdue`. "Today" is the UTC date of the server clock.
+
 Full scope: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
 ## How to run it
-
-> Available after mission [M02](docs/missions/M02-bootstrap-skeleton.md). The commands below are the planned ones.
 
 **Stack:** Node.js 22, Express 5, SQLite (`node:sqlite`), plain HTML/CSS/JS, Vitest + Supertest, ESLint.
 
@@ -79,12 +90,12 @@ team of specialised subagents, under human review at every step.
 
 | Mission | Status |
 |---|---|
-| M01 Project setup (this README, CLAUDE.md, missions) | in progress |
-| M02 Bootstrap skeleton | todo |
-| M03 CI pipeline | todo |
-| M04 US-01 Roadmap with milestones | todo |
-| M05 US-02 Status and progress | todo |
-| M06 US-03 Events and next 30 days | todo |
+| M01 Project setup (this README, CLAUDE.md, missions) | done |
+| M02 Bootstrap skeleton | done |
+| M03 CI pipeline | done |
+| M04 US-01 Roadmap with milestones | done |
+| M05 US-02 Status and progress | done |
+| M06 US-03 Events and next 30 days | in review |
 | M07 CD and release v0.1.0 | todo |
 | M08 Final README | todo |
 
@@ -92,5 +103,5 @@ team of specialised subagents, under human review at every step.
 the SQLite data is lost on every redeploy, restart or spin-down. The live app is a demo; keep
 real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
 
-**Next:** M02, the project skeleton (Express app, health endpoint, DevContainer, Docker).
+**Next:** review and merge M06, then M07, continuous deployment and release v0.1.0.
 After v0.1.0: the backlog stories for v0.2 (paper digest, opportunities board).

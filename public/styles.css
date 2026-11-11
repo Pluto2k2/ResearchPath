@@ -135,6 +135,8 @@ html {
 }
 
 #roadmap-section,
+#progress-section,
+#upcoming-section,
 .content {
   scroll-margin-top: 4.5rem;
 }
@@ -408,6 +410,193 @@ h2 {
   border-bottom: 3px solid var(--accent);
 }
 
+/* ---- Status shapes (roadmap nodes and progress counts) ---- */
+
+.node-shape.status-doing,
+.status-shape.status-doing {
+  background: linear-gradient(to right, var(--accent) 50%, var(--bg) 50%);
+}
+
+.node-shape.status-done,
+.status-shape.status-done {
+  background: var(--navy);
+  color: var(--bg);
+}
+
+.node-shape.status-blocked,
+.status-shape.status-blocked {
+  background: var(--accent);
+  color: var(--navy);
+}
+
+.node-shape.status-done::after,
+.status-shape.status-done::after {
+  content: "\2713";
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.node-shape.status-blocked::after,
+.status-shape.status-blocked::after {
+  content: "!";
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.status-shape {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--surface);
+  border: 3px solid var(--ink);
+}
+
+.node-status {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ---- Progress card ---- */
+
+.progress-text {
+  margin: 0 0 0.75rem;
+  font-family: var(--pixel-font);
+  font-size: 1.2rem;
+}
+
+.progress-bar {
+  height: 1.5rem;
+  background: var(--ink-faint);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s steps(6);
+}
+
+.progress-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-counts li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-count {
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* ---- Upcoming card ---- */
+
+#upcoming-section {
+  margin-top: 1.5rem;
+}
+
+.upcoming-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.upcoming-head h2 {
+  margin: 0;
+}
+
+.upcoming-head button.primary {
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.upcoming-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.upcoming-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 0.6rem 0;
+  border-top: 2px solid var(--ink-faint);
+  transition: background-color 0.15s steps(3);
+}
+
+.upcoming-item:hover {
+  background: var(--ink-faint);
+}
+
+.upcoming-date {
+  min-width: 4.5rem;
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.upcoming-kind,
+.upcoming-flag {
+  padding: 0.1rem 0.5rem;
+  font-family: var(--pixel-font);
+  font-size: 0.85rem;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Coral fill with navy text, never coral text. */
+.upcoming-flag {
+  font-weight: 700;
+  background: var(--accent);
+}
+
+.upcoming-title {
+  flex: 1 1 10rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.upcoming-days {
+  font-family: var(--pixel-font);
+  color: var(--ink-soft);
+}
+
+.upcoming-item.overdue .upcoming-date,
+.upcoming-item.overdue .upcoming-days {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline solid var(--accent) 3px;
+  text-underline-offset: 3px;
+}
+
+.upcoming-empty {
+  padding-top: 0.5rem;
+}
+
 /* ---- Popovers ---- */
 
 .popover {
@@ -479,6 +668,29 @@ h2 {
   display: none;
 }
 
+.popover-status-label {
+  display: block;
+  margin: 0.75rem 0 0.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.popover-status {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+.popover-status:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 /* ---- Form ---- */
 
 form label {
@@ -489,6 +701,7 @@ form label {
 }
 
 form input,
+form select,
 form textarea {
   display: block;
   width: 100%;
@@ -546,6 +759,11 @@ button.primary:disabled {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .progress-fill,
+  .upcoming-item {
+    transition: none;
   }
 
   .node-shape,
