@@ -1,4 +1,5 @@
 import { formatShortDate } from './dates.js';
+import { createRamyImage } from './mascot.js';
 
 const EVENT_LABELS = {
   conference: 'Conference',
@@ -58,7 +59,9 @@ export function renderUpcomingItem(item) {
 export function renderUpcoming(listEl, items) {
   listEl.replaceChildren();
   if (!items || items.length === 0) {
-    listEl.append(el('li', 'upcoming-empty', 'Nothing due in the next 30 days.'));
+    const empty = el('li', 'upcoming-empty');
+    empty.append(createRamyImage('sleep'), el('span', null, 'Nothing due in the next 30 days.'));
+    listEl.append(empty);
     return;
   }
   for (const item of items) listEl.append(renderUpcomingItem(item));

@@ -20,7 +20,7 @@ export function daysLabel(targetDate, today) {
   return diff > 0 ? `${n} ${unit} left` : `${n} ${unit} overdue`;
 }
 
-function dayDiff(targetDate, today) {
+export function dayDiff(targetDate, today) {
   return Math.round((toUtcMs(targetDate) - toUtcMs(today)) / 86400000);
 }
 

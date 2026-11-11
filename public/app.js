@@ -1,5 +1,6 @@
 import { localToday } from './dates.js';
 import { bindPopover, renderRoadmap } from './roadmap.js';
+import { initHeroRamy } from './mascot.js';
 import { initNews } from './news.js';
 import { startRouter } from './router.js';
 import { STATUS_VALUES } from './status.js';
@@ -29,6 +30,10 @@ const eventPopoverController = bindPopover(eventPopover, eventPopover.querySelec
 
 const headerAdd = document.querySelector('#header-add');
 let milestones = [];
+let milestonesLoaded = false;
+let lastProgress = null;
+let lastUpcoming = null;
+const hero = initHeroRamy();
 let openedBy = null;
 let lastWidth = 0;
 
@@ -114,7 +119,10 @@ async function loadProgress() {
     const res = await fetch('/api/progress');
     if (!res.ok) throw new Error(await readError(res));
     const data = await res.json();
-    if (mine === progressRequest) renderProgress(data);
+    if (mine === progressRequest) {
+      renderProgress(data);
+      lastProgress = data;
+    }
   } catch (err) {
     if (mine !== progressRequest) return;
     errorBox.textContent = err instanceof TypeError ? NETWORK_ERROR : err.message || GENERIC_ERROR;
@@ -131,11 +139,23 @@ async function loadUpcoming() {
     if (!res.ok) throw new Error(await readError(res));
     const data = await res.json();
     if (!Array.isArray(data)) throw new Error(GENERIC_ERROR);
-    if (mine === upcomingRequest) renderUpcoming(upcomingList, data);
+    if (mine === upcomingRequest) {
+      renderUpcoming(upcomingList, data);
+      lastUpcoming = data;
+    }
   } catch (err) {
     if (mine !== upcomingRequest) return;
     errorBox.textContent = err instanceof TypeError ? NETWORK_ERROR : err.message || GENERIC_ERROR;
   }
+}
+
+function refreshRamy() {
+  hero.update({
+    milestones: milestonesLoaded ? milestones : null,
+    progress: lastProgress,
+    upcoming: lastUpcoming,
+    today: localToday(new Date()),
+  });
 }
 
 async function onEventSubmit(event) {
@@ -164,6 +184,7 @@ async function onEventSubmit(event) {
     eventForm.reset();
     eventPopoverController.close();
     await loadUpcoming();
+    refreshRamy();
   } catch {
     showError(NETWORK_ERROR);
     eventPopoverController.close();
@@ -181,6 +202,7 @@ function showError(message) {
 // Returns the updated milestone, or null after showing the error (status stays unchanged).
 async function changeStatus(id, status) {
   errorBox.textContent = '';
+  const was = milestones.find((m) => m.id === id)?.status;
   try {
     const res = await fetch(`/api/milestones/${encodeURIComponent(id)}/status`, {
       method: 'PATCH',
@@ -195,6 +217,8 @@ async function changeStatus(id, status) {
     milestones = milestones.map((m) => (m.id === updated.id ? updated : m));
     draw();
     await Promise.all([loadProgress(), loadUpcoming()]);
+    refreshRamy();
+    if (updated.status === 'done' && was !== 'done') hero.celebrate();
     return updated;
   } catch {
     showError(NETWORK_ERROR);
@@ -207,6 +231,7 @@ async function loadRoadmap() {
     const res = await fetch('/api/milestones');
     if (!res.ok) throw new Error(await readError(res));
     milestones = await res.json();
+    milestonesLoaded = true;
     draw();
     errorBox.textContent = '';
   } catch (err) {
@@ -238,9 +263,8 @@ async function onSubmit(event) {
     addPopoverController.close();
     form.reset();
     await loadRoadmap();
-    loadProgress();
-    loadUpcoming();
     focusOpener();
+    Promise.all([loadProgress(), loadUpcoming()]).then(refreshRamy);
   } catch {
     // fetch itself threw (offline): same handling as an API error.
     failSubmit(NETWORK_ERROR);
@@ -267,9 +291,7 @@ eventAdd.addEventListener('click', () => {
   else eventPopoverController.open(eventAdd);
 });
 eventForm.addEventListener('submit', onEventSubmit);
-loadRoadmap();
-loadProgress();
-loadUpcoming();
+Promise.all([loadRoadmap(), loadProgress(), loadUpcoming()]).then(refreshRamy);
 
 const news = initNews();
 startRouter({
