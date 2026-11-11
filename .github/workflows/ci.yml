@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+# A new push to the same branch cancels the outdated run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    name: lint-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+  docker-build:
+    name: docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the prod image (no push)
+        run: docker build --target prod -t researchpath:ci .
+
+      - name: Smoke test the container
+        run: |
+          docker run -d --name app -p 3000:3000 researchpath:ci
+          deadline=$((SECONDS + 20))
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            if [ "$(docker inspect -f '{{.State.Running}}' app)" != "true" ]; then
+              echo "Container exited before answering"
+              docker logs app
+              exit 1
+            fi
+            if curl -fsS --max-time 2 http://localhost:3000/api/health; then
+              echo
+              echo "Health check answered"
+              docker logs app
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Health check did not answer within 20 seconds"
+          docker logs app
+          exit 1
