@@ -1,3 +1,4 @@
+import { setMascot } from './mascot.js';
 import { routeFromHash } from './router.js';
 import {
   PRESET_CATEGORIES,
@@ -97,6 +98,8 @@ export function initNews() {
   const papersList = document.querySelector('#papers-list');
   const topicsSection = document.querySelector('#topics-section');
   const topicsList = document.querySelector('#topics-list');
+  const newsRamy = document.querySelector('#news-ramy');
+  const retry = document.querySelector('#news-retry');
 
   let interests = loadInterests();
   let request = 0;
@@ -132,7 +135,10 @@ export function initNews() {
     emptyBox.hidden = any;
     papersSection.hidden = !any;
     topicsSection.hidden = !any;
-    if (!any) loading.hidden = true;
+    if (!any) {
+      loading.hidden = true;
+      newsRamy.hidden = true;
+    }
   }
 
   function change(next) {
@@ -161,6 +167,11 @@ export function initNews() {
     const query = buildNewsQuery(interests);
     loading.hidden = false;
     errorBox.textContent = '';
+    newsRamy.hidden = false;
+    // Hiding a focused button would drop focus to the body: move it somewhere stable first.
+    if (document.activeElement === retry) document.querySelector('#papers-heading')?.focus();
+    retry.hidden = true;
+    setMascot('tablet', 'Fetching the latest papers...', newsRamy);
     const [papers, topics] = await Promise.allSettled([
       fetchJson(`/api/news/papers?${query}`),
       fetchJson(`/api/news/topics?${query}`),
@@ -169,6 +180,14 @@ export function initNews() {
     loading.hidden = true;
     show(papersList, renderPapers, papers);
     show(topicsList, renderTopics, topics);
+    if (papers.status === 'rejected') {
+      setMascot('thinking', "I couldn't load the papers. Try again?", newsRamy);
+      retry.hidden = false;
+    } else if (topics.status === 'rejected') {
+      setMascot('shy', 'Hot topics are unavailable right now.', newsRamy);
+    } else {
+      setMascot('reading', 'Here are the latest papers for you.', newsRamy);
+    }
   }
 
   form.addEventListener('submit', (event) => {
@@ -183,6 +202,7 @@ export function initNews() {
     change(result.interests);
   });
 
+  retry.addEventListener('click', load);
   renderInterests();
   showEmpty();
   return { activate: load };

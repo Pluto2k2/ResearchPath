@@ -21,15 +21,16 @@ New missions follow [`_template.md`](_template.md).
 | M07 | [Continuous deployment and release v0.1.0](M07-cd-release.md) | — | `ci/cd-release` | M06 | devops | done |
 | M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07, M09 | docs | done |
 | M09 | [Research news tab](M09-research-news.md) | US-04 | `feature/research-news` | M07 | devops, backend, frontend, test | done |
-| M10 | [Hardening for the public site (release v0.2.1)](M10-hardening.md) | — | `fix/hardening` | M08, M09 | devops, backend, frontend, test | in review |
+| M10 | [Hardening for the public site (release v0.2.1)](M10-hardening.md) | — | `fix/hardening` | M08, M09 | devops, backend, frontend, test | done |
+| M11 | [Ramy, your research guide buddy! (release v0.3.0)](M11-ramy-mascot.md) | — | `feature/ramy-mascot` | M10 | frontend, test, devops, docs | in review |
 
 Every mission also goes through `mission-planner`, `code-reviewer` and `docs-writer`
 (see "Agent team" in [`CLAUDE.md`](../../CLAUDE.md)).
 
 ## Backlog (not planned as missions yet)
 
-US-05 events and opportunities board (v0.2); US-06 draft sharing with peers, US-07 accounts
-(v0.3). US-04 left the backlog with M09 (research news tab, on-demand, not a daily digest). See
+US-05 events and opportunities board (v0.2); US-06 draft sharing with peers (later, needs accounts), US-07 accounts (later);
+US-08 email reminders from Ramy (needs US-07 accounts, design note only in M11). US-04 left the backlog with M09 (research news tab, on-demand, not a daily digest). See
 [`docs/mvp-scope.md`](../mvp-scope.md).
 
 npm audit: 4 moderate warnings from minimatch inside ESLint 10 (dev only); the forced fix downgrades ESLint to 9 (found in M04b).
@@ -45,3 +46,5 @@ Deferred from the M09 review: the arXiv spacer queue is uncapped (many distinct 
 Deferred from the M07 review: CD does not run lint or tests (rule for now: tag only commits already on `main`); GitHub Actions build cache in `docker/build-push-action`; a comment next to the Dockerfile `CMD` explaining `--disable-warning=ExperimentalWarning`.
 
 Deferred from the M10 review: verify Render's proxy hop count after deploy (check `req.ips`; raise `TRUST_PROXY_HOPS` if all users share one bucket); per-IPv6-address limiting lets a client rotate within its /64; a second Ctrl+C is ignored during shutdown; an older CD run can time out after two quick merges to `main` (Render deploys the latest `main`).
+
+Deferred from the M11 review: two announcements while news loads (`#news-loading` and the news bubble); the pose swap downloads a second PNG on first view, and `celebrate` may flash on first use (no preload); `shortTitle` can cut a ZWJ emoji sequence or flag (`Intl.Segmenter` would fix it); Ramy keeps the last good progress and upcoming data after a failed refresh.

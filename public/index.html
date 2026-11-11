@@ -32,6 +32,14 @@
       </section>
 
       <div id="view-roadmap" data-view="roadmap">
+        <div id="ramy" class="ramy ramy-hero">
+          <button type="button" id="ramy-button" class="ramy-button" aria-label="Ramy, tips">
+            <img class="ramy-img" src="mascot/mascot-idle.png" width="146" height="244" alt="">
+          </button>
+          <p class="ramy-label">Ramy, your research guide buddy!</p>
+          <p id="ramy-bubble" class="ramy-bubble" aria-live="polite"></p>
+        </div>
+
         <section class="roadmap-band" id="roadmap-section" aria-labelledby="roadmap-heading">
           <h2 id="roadmap-heading">Roadmap</h2>
           <div id="roadmap" class="roadmap"></div>
@@ -80,9 +88,14 @@
 
         <p id="news-empty" class="news-empty">Pick a category or add a keyword to see the latest papers and hot topics.</p>
         <p id="news-loading" class="news-loading" role="status" hidden>Loading...</p>
+        <div id="news-ramy" class="ramy ramy-news" hidden>
+          <img class="ramy-img" src="mascot/mascot-tablet.png" width="128" height="221" alt="" loading="lazy">
+          <p class="ramy-bubble" aria-live="polite"></p>
+          <button type="button" id="news-retry" class="primary" hidden>Try again</button>
+        </div>
 
         <section id="papers-section" class="card" aria-labelledby="papers-heading" hidden>
-          <h2 id="papers-heading">Latest papers</h2>
+          <h2 id="papers-heading" tabindex="-1">Latest papers</h2>
           <ul id="papers-list" class="papers-list"></ul>
         </section>
 

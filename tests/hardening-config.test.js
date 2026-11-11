@@ -43,8 +43,8 @@ describe('M10 .env loading', () => {
     expect(cmds.at(-1)).not.toContain('env-file');
   });
 
-  it('is released as version 0.2.1', () => {
-    expect(pkg.version).toBe('0.2.1');
+  it('is released as version 0.3.0', () => {
+    expect(pkg.version).toBe('0.3.0');
   });
 });
 

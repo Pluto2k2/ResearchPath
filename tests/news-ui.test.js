@@ -62,8 +62,8 @@ describe('US-04 static page structure', () => {
 });
 
 describe('US-04 release', () => {
-  it('package.json version is 0.2.1', () => {
-    expect(JSON.parse(read('package.json')).version).toBe('0.2.1');
+  it('package.json version is 0.3.0', () => {
+    expect(JSON.parse(read('package.json')).version).toBe('0.3.0');
   });
 
   it('declares fast-xml-parser as a dependency', () => {
