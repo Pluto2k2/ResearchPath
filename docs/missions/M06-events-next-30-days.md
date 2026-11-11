@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `feature/events-next-30-days` |
 | **Depends on** | M05 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -64,7 +64,7 @@ with my milestones, so that I never miss a date.* "Today" is derived from the in
   - `tests/upcoming.test.js`: 21 tests.
   - `tests/upcoming.dom.test.js`: 21 tests.
 - Lint / tests / build: `npm run lint` clean; `npm test`: 16 files, 300 tests passed. [TODO: CI result after push]
-- Pull request: [TODO: link after push]
+- Pull request: [#9](https://github.com/Pluto2k2/ResearchPath/pull/9); released in v0.1.0 ([#10](https://github.com/Pluto2k2/ResearchPath/pull/10))
 - Decisions:
   - "Today" on the server is the UTC date of the injected `now()`.
   - The URL prefix check is case-sensitive on the server: `HTTPS://` is rejected.

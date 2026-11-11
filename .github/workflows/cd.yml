@@ -90,12 +90,25 @@ jobs:
           # Free-plan Render builds from source and may cold start: allow 15 minutes
           deadline=$((SECONDS + 900))
           sleep 30
+          sha="$GITHUB_SHA"
           while [ "$SECONDS" -lt "$deadline" ]; do
             if body=$(curl -fsS --max-time 10 "$url"); then
-              echo "Health check OK: $body"
-              exit 0
+              commit=$(printf '%s' "$body" | jq -r 'if has("commit") then (.commit // "null") else "absent" end' 2>/dev/null || echo invalid)
+              if [ "$commit" = "$sha" ]; then
+                echo "Live app reports commit $sha: $body"
+                exit 0
+              fi
+              if [ "$commit" = "null" ]; then
+                echo "::warning::Live app reports commit null (RENDER_GIT_COMMIT unset); falling back to the status check"
+                if [ "$(printf '%s' "$body" | jq -r '.status')" = "ok" ]; then
+                  echo "Health check OK: $body"
+                  exit 0
+                fi
+              else
+                echo "Live commit is $commit, waiting for $sha"
+              fi
             fi
             sleep 10
           done
-          echo "::error::Health check did not return 200 within 15 minutes"
+          echo "::error::/api/health did not report commit $GITHUB_SHA within 15 minutes"
           exit 1

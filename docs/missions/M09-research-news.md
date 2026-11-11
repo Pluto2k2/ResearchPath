@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `feature/research-news` |
 | **Depends on** | M07 (v0.1.0 released) |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -58,8 +58,7 @@ Agents: `devops-engineer` (new dependency `fast-xml-parser`, version 0.2.0, `.en
 
 ### Release
 
-- [ ] `package.json` version is `0.2.0`. `CLAUDE.md` lists US-04 in scope, the news files in the architecture and `OPENALEX_MAILTO` in the configuration table. The tag `v0.2.0` is created only after the release pull request to `main` is merged, with the user's approval.
-  - Not ticked yet: tag `v0.2.0` after release PR to `main` is merged (with the user's approval).
+- [x] `package.json` version is `0.2.0`. `CLAUDE.md` lists US-04 in scope, the news files in the architecture and `OPENALEX_MAILTO` in the configuration table. The tag `v0.2.0` is created only after the release pull request to `main` is merged, with the user's approval.
 
 ## Out of scope
 
@@ -99,7 +98,7 @@ Agents: `devops-engineer` (new dependency `fast-xml-parser`, version 0.2.0, `.en
   - `npm test`: 23 files, 482 tests, all passing.
   - Manual smoke with the real APIs: papers `200` (20 items), topics `200` (10 items).
   - Build: not reported for this mission.
-- Pull request: [TODO: link after push].
+- Pull request: [#13](https://github.com/Pluto2k2/ResearchPath/pull/13); release [#14](https://github.com/Pluto2k2/ResearchPath/pull/14), tag [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0)
 - Decisions:
   - Several keywords are sent as one comma-separated `q` with OR semantics; commas are therefore rejected inside a keyword.
   - Topics ignore the categories when a keyword is present.

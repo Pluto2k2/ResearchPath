@@ -69,7 +69,7 @@ Agents: `devops-engineer` (config, Docker, DevContainer), `backend-dev` (`src/`)
   - `docker build --target prod`: OK. The container answers `/api/health` with `{"status":"ok"}`, serves `/`, and runs as user `node`.
   - Node prints a harmless ExperimentalWarning for `node:sqlite`.
   - Versions: Node 22.21.0, Express 5.3.0, Vitest 5.1.0, Supertest 7.3.2, ESLint 10.14.0, `@eslint/js` 10.0.1, `globals` 17.14.0. The last two were approved by the user as extra devDependencies for the ESLint flat config.
-- Pull request: [TODO: PR link]
+- Pull request: [#2](https://github.com/Pluto2k2/ResearchPath/pull/2)
 - Reviewer follow-ups (not applied):
   - The error handler maps other 4xx body-parser errors (e.g. 413) to 500.
   - No `res.headersSent` guard in the error handler.

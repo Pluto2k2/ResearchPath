@@ -58,7 +58,7 @@ shows where I really stand.* Agents: `backend-dev`, `frontend-dev` (in parallel)
   - `tests/progress.test.js`: 7 tests.
   - `tests/status-progress.dom.test.js`: 15 tests.
 - Lint / tests / build: `npm run lint` clean; `npm test`: 13 files, 212 tests passed. Docker build not run locally. Not yet checked in a browser.
-- Pull request: [TODO: link after push]
+- Pull request: [#8](https://github.com/Pluto2k2/ResearchPath/pull/8)
 - Decisions:
   - The status selector lives in the node detail popover (user decision).
   - The status name is folded into the node's relative line ("in 19 days · Done") to avoid label clipping.

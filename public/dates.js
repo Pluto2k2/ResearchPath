@@ -38,6 +38,19 @@ export function isOverdue(targetDate, today) {
   return targetDate < today;
 }
 
+// A finished milestone is never late: the past date just means it was done.
+export function milestoneOverdue(m, today) {
+  return m.status !== 'done' && isOverdue(m.targetDate, today);
+}
+
+export function milestoneRelativeLabel(m, today) {
+  if (m.status === 'done' && isOverdue(m.targetDate, today)) {
+    const n = Math.abs(dayDiff(m.targetDate, today));
+    return `${n} ${n === 1 ? 'day' : 'days'} ago`;
+  }
+  return relativeLabel(m.targetDate, today);
+}
+
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // Hand-made instead of Intl so the output never depends on the browser locale.

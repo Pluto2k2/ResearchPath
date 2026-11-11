@@ -28,13 +28,15 @@ export function createFakeClock(startIso = `${TODAY}T12:00:00Z`) {
 }
 
 // `clock` is a createFakeClock() result; `wait` defaults to advancing it.
-export function createNewsTestApp({ fetch, wait, clock = createFakeClock(), openAlexMailto } = {}) {
+export function createNewsTestApp({ fetch, wait, clock = createFakeClock(), openAlexMailto, trustProxy, commit } = {}) {
   return createApp({
     db: openDatabase(':memory:'),
     now: clock.now,
     fetch,
     wait: wait ?? (async (ms) => clock.advance(ms)),
     openAlexMailto,
+    trustProxy,
+    commit,
   });
 }
 

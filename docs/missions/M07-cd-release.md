@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) + You (GitHub, Render, release pull request) |
 | **Branch** | `ci/cd-release` |
 | **Depends on** | M06 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -71,11 +71,11 @@ Steps for these checks: [`docs/deployment.md`](../deployment.md).
   - The containers reach `healthy` with `PORT=10000` and with the default port.
   - `actionlint` on `cd.yml`: no findings.
   - Grep for secrets and token URLs in the repository: nothing found.
-- Pull request: [TODO: PR link for `ci/cd-release` -> `develop`]
-- Real CD runs (not yet seen):
-  - [TODO: URL of the first CD run on `main`, and the GHCR package link]
-  - [TODO: URL of the CD run for tag `v0.1.0`]
-  - [TODO: Render service URL and the `/api/health` check]
+- Pull request: [#11](https://github.com/Pluto2k2/ResearchPath/pull/11); release [#12](https://github.com/Pluto2k2/ResearchPath/pull/12), tag v0.1.0
+- Real CD runs:
+  - First CD run on `main` (green): https://github.com/Pluto2k2/ResearchPath/actions/runs/43052462230; image `ghcr.io/pluto2k2/researchpath`
+  - CD run for tag `v0.1.0` (green): https://github.com/Pluto2k2/ResearchPath/actions/runs/43053079318
+  - Live URL: https://researchpath.onrender.com; `/api/health` answers `{"status":"ok"}`.
 - Decisions (from the user):
   - Deploy only from `main`, never from a version tag.
   - A missing `RENDER_DEPLOY_HOOK_URL` or `APP_URL` gives a workflow warning; the job stays green.
