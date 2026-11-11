@@ -1,5 +1,7 @@
 import { localToday } from './dates.js';
 import { bindPopover, renderRoadmap } from './roadmap.js';
+import { initNews } from './news.js';
+import { startRouter } from './router.js';
 import { STATUS_VALUES } from './status.js';
 import { renderUpcoming } from './upcoming.js';
 
@@ -252,7 +254,9 @@ let resizeTimer = null;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (roadmap.clientWidth !== lastWidth) draw();
+    const width = roadmap.clientWidth;
+    // A hidden roadmap (news tab) measures 0: drawing then would break the layout.
+    if (width !== 0 && width !== lastWidth) draw();
   }, RESIZE_DELAY_MS);
 });
 
@@ -266,3 +270,17 @@ eventForm.addEventListener('submit', onEventSubmit);
 loadRoadmap();
 loadProgress();
 loadUpcoming();
+
+const news = initNews();
+startRouter({
+  onNews: () => {
+    // Popovers belong to the roadmap tab; a synthetic outside press closes whichever is open.
+    document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    news.activate();
+  },
+  // The roadmap may have been drawn (or resized) while hidden: redraw at its real width.
+  onRoadmap: () => {
+    const width = roadmap.clientWidth;
+    if (width !== 0 && width !== lastWidth) draw();
+  },
+});
