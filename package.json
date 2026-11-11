@@ -1,6 +1,6 @@
 {
   "name": "researchpath",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Roadmap and 30-day agenda for PhD students",
@@ -8,8 +8,8 @@
     "node": ">=22.13"
   },
   "scripts": {
-    "start": "node --disable-warning=ExperimentalWarning src/server.js",
-    "dev": "node --watch --disable-warning=ExperimentalWarning src/server.js",
+    "start": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning src/server.js",
+    "dev": "node --env-file-if-exists=.env --watch --disable-warning=ExperimentalWarning src/server.js",
     "test": "vitest run",
     "lint": "eslint ."
   },
