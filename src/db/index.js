@@ -7,5 +7,14 @@ export function openDatabase(path) {
   if (path !== ':memory:') {
     mkdirSync(dirname(path), { recursive: true });
   }
-  return new DatabaseSync(path);
+  const db = new DatabaseSync(path);
+  db.exec(`CREATE TABLE IF NOT EXISTS milestones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    target_date TEXT NOT NULL,
+    notes TEXT,
+    status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','doing','done','blocked')),
+    created_at TEXT NOT NULL
+  )`);
+  return db;
 }

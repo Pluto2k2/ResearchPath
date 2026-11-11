@@ -1,6 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { healthRouter } from './routes/health.js';
+import { milestonesRouter } from './routes/milestones.js';
 
 // Resolved from this file, not the cwd, so it works wherever the server starts.
 const publicDir = fileURLToPath(new URL('../public', import.meta.url));
@@ -27,6 +28,7 @@ export function createApp({ db, now }) {
 
   app.use(express.json());
   app.use('/api', healthRouter);
+  app.use('/api', milestonesRouter);
   app.use('/api', notFoundHandler);
   app.use(express.static(publicDir));
   app.use(errorHandler);

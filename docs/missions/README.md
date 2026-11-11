@@ -14,7 +14,7 @@ New missions follow [`_template.md`](_template.md).
 | M01 | [Project setup: README, CLAUDE.md, missions](M01-project-setup.md) | — | `docs/project-setup` | none | orchestrator | done |
 | M02 | [Bootstrap the project skeleton](M02-bootstrap-skeleton.md) | — | `chore/bootstrap-skeleton` | M01 | devops, backend, frontend, test | in review |
 | M03 | [CI pipeline](M03-ci-pipeline.md) | — | `ci/github-actions` | M02 | devops | in review |
-| M04 | [Research roadmap with milestones](M04-roadmap-milestones.md) | US-01 | `feature/roadmap-milestones` | M03 | backend, frontend, test | todo |
+| M04 | [Research roadmap with milestones](M04-roadmap-milestones.md) | US-01 | `feature/roadmap-milestones` | M03 | backend, frontend, test | in review |
 | M05 | [Milestone status and overall progress](M05-milestone-status-progress.md) | US-02 | `feature/milestone-status-progress` | M04 | backend, frontend, test | todo |
 | M06 | [Events and the next 30 days](M06-events-next-30-days.md) | US-03 | `feature/events-next-30-days` | M05 | backend, frontend, test | todo |
 | M07 | [Continuous deployment and release v0.1.0](M07-cd-release.md) | — | `ci/cd-release` | M06 | devops | todo |
@@ -27,3 +27,5 @@ Every mission also goes through `mission-planner`, `code-reviewer` and `docs-wri
 
 US-04 daily paper digest, US-05 events and opportunities board (v0.2); US-06 draft sharing
 with peers, US-07 accounts (v0.3). See [`docs/mvp-scope.md`](../mvp-scope.md).
+
+Body-parser `entity.too.large` returns 500 instead of 413 (found in M04 review).
