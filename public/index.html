@@ -9,31 +9,45 @@
   </head>
   <body>
     <header class="site-header">
-      <h1>ResearchPath</h1>
-      <p class="tagline">Your PhD roadmap, and every date that matters.</p>
+      <span class="brand">ResearchPath</span>
+      <nav aria-label="Sections" class="site-nav">
+        <ul>
+          <li><a href="#roadmap-section">Roadmap</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="header-add" class="primary header-add">+ Milestone</button>
     </header>
-    <main class="site-main" id="app">
-      <section class="card" aria-labelledby="add-heading">
-        <h2 id="add-heading">Add a milestone</h2>
-        <form id="milestone-form" novalidate>
-          <label for="milestone-title">Title</label>
-          <input id="milestone-title" name="title" type="text" autocomplete="off" />
+    <main id="app">
+      <p id="milestone-error" class="form-error" role="alert"></p>
 
-          <label for="milestone-date">Target date</label>
-          <input id="milestone-date" name="targetDate" type="date" />
-
-          <label for="milestone-notes">Notes</label>
-          <textarea id="milestone-notes" name="notes" rows="3"></textarea>
-
-          <p id="milestone-error" class="form-error" role="alert"></p>
-          <button type="submit">Add milestone</button>
-        </form>
+      <section class="hero">
+        <h1>Your PhD roadmap, <span class="hero-accent">and every deadline on the way.</span></h1>
+        <p class="hero-sub">Plan your milestones, track your progress, never miss a conference or funding date.</p>
       </section>
 
-      <section aria-labelledby="roadmap-heading">
+      <section class="roadmap-band" id="roadmap-section" aria-labelledby="roadmap-heading">
         <h2 id="roadmap-heading">Roadmap</h2>
-        <ol id="roadmap" class="timeline"></ol>
+        <div id="roadmap" class="roadmap"></div>
       </section>
+
+      <div class="content"></div>
     </main>
+
+    <div id="add-popover" class="popover card" role="dialog" aria-labelledby="add-heading" tabindex="-1" hidden>
+      <button type="button" class="popover-close" aria-label="Close">&times;</button>
+      <h2 id="add-heading" class="popover-title">Add a milestone</h2>
+      <form id="milestone-form" novalidate>
+        <label for="milestone-title">Title</label>
+        <input id="milestone-title" name="title" type="text" autocomplete="off" />
+
+        <label for="milestone-date">Target date</label>
+        <input id="milestone-date" name="targetDate" type="date" />
+
+        <label for="milestone-notes">Notes</label>
+        <textarea id="milestone-notes" name="notes" rows="3"></textarea>
+
+        <button type="submit" class="primary">Add milestone</button>
+      </form>
+    </div>
   </body>
 </html>

@@ -19,3 +19,29 @@ export function daysLabel(targetDate, today) {
   const unit = n === 1 ? 'day' : 'days';
   return diff > 0 ? `${n} ${unit} left` : `${n} ${unit} overdue`;
 }
+
+function dayDiff(targetDate, today) {
+  return Math.round((toUtcMs(targetDate) - toUtcMs(today)) / 86400000);
+}
+
+// Roadmap wording: "in 3 days" reads better under a node than "3 days left".
+export function relativeLabel(targetDate, today) {
+  const diff = dayDiff(targetDate, today);
+  if (diff === 0) return 'today';
+  const n = Math.abs(diff);
+  const unit = n === 1 ? 'day' : 'days';
+  return diff > 0 ? `in ${n} ${unit}` : `${n} ${unit} overdue`;
+}
+
+// A milestone dated today is not overdue: the day is not over yet.
+export function isOverdue(targetDate, today) {
+  return targetDate < today;
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Hand-made instead of Intl so the output never depends on the browser locale.
+export function formatShortDate(ymd) {
+  const [, m, d] = ymd.split('-').map(Number);
+  return `${d} ${MONTHS[m - 1]}`;
+}
