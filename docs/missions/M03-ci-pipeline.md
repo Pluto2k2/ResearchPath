@@ -56,7 +56,7 @@ with green CI. This mission creates that CI. Agent: `devops-engineer` only.
   - The smoke test passed locally. Its fast-fail path was checked with a container that exits immediately.
   - The 20-second timeout path was not exercised.
   - The workflow has not run on GitHub yet.
-- Pull request: [TODO: link to the PR once opened]
+- Pull request: [#3](https://github.com/Pluto2k2/ResearchPath/pull/3)
 
 ### GitHub settings to apply (you)
 

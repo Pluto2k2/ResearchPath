@@ -73,7 +73,7 @@ Visual reference, read only (ignore its status, progress and upcoming parts):
 - Buttons are coral with navy text (~5.5:1).
 - Known gaps / manual checks: Checked in Chrome at desktop width by the orchestrator (sample data): nav bar, hero, full-width band, TODAY marker, overdue halo and underline, "+" node, "+ Milestone" popover, Esc closing it with focus back on the button. Phone width not checked in a browser (window resize failed). Docker image not built locally (CI builds it).
 - Lint / tests / build: `npm run lint` clean; `npm test` 10 files, 160 of 160 passing.
-- Pull request: [TODO: link]
+- Pull request: [#6](https://github.com/Pluto2k2/ResearchPath/pull/6) (to `main`), [#7](https://github.com/Pluto2k2/ResearchPath/pull/7) (to `develop`)
 
 ## Review notes (filled by you)
 

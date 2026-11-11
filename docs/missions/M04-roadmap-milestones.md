@@ -58,7 +58,7 @@ This is the minimum moment of value of the MVP. Agents: `backend-dev`, `frontend
 - Lint / tests / build:
   - Locally: `npm run lint` is clean. `npm test` runs 7 files, 65 of 65 tests passing.
   - Docker build: not run locally. CI runs it (`docker-build` job).
-- Pull request: [TODO: link after push]
+- Pull request: [#5](https://github.com/Pluto2k2/ResearchPath/pull/5)
 
 ## Review notes (filled by you)
 
