@@ -401,6 +401,21 @@ describe('M11 Ramy in Research news', () => {
   });
 });
 
+describe('M11 Ramy placement', () => {
+  it('is inside the roadmap view, outside the hero, and hidden on #/news', async () => {
+    await loadPage({ hash: '#/news' });
+    expect($('#ramy').closest('[data-view="roadmap"]')).toBeTruthy();
+    expect($('#ramy').closest('.hero')).toBeNull();
+    expect($('.hero #ramy')).toBeNull();
+    expect($('#view-roadmap').hidden).toBe(true);
+  });
+
+  it('is visible on the roadmap tab', async () => {
+    await loadPage();
+    expect($('#view-roadmap').hidden).toBe(false);
+  });
+});
+
 describe('M11 review fixes', () => {
   const callsOf = () => fetchMock.mock.calls.map(([u, o]) => `${o?.method ?? 'GET'} ${u}`).sort();
 

@@ -55,7 +55,7 @@ from OpenAlex for the last 365 days. It is on demand, not a daily digest.
 - `GET /api/news/topics?categories=...&q=...` returns the top 10 OpenAlex topics with their counts.
 - At least one of `categories` or `q` is required. Both endpoints are cached on the server for 30 minutes. When an upstream API fails or times out, the endpoint returns `502` with a message.
 
-**Ramy, your research guide buddy (M11, release v0.3.0, in review):** a mascot in the hero, beside the headline.
+**Ramy, your research guide buddy (M11, release v0.3.0, in review):** a mascot standing above the roadmap, with a floating speech bubble.
 His speech bubble says the most useful thing right now: an overdue milestone, a deadline within 7 days, a progress
 step (25, 50, 75 or 100 %), or a tip. Clicking Ramy shows the next message. He reacts to a finished milestone, to an
 empty next-30-days list, and to the Research news tab (loading, errors, hot topics unavailable). Mission:

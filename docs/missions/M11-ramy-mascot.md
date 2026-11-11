@@ -38,17 +38,17 @@ Agents: `devops-engineer` (version 0.3.0 only), `frontend-dev`, `test-writer`, `
 ### Ramy in the UI
 
 - [x] `public/mascot.js` exports `setMascot(pose, text)`, the only function that changes Ramy's image and bubble.
-- [x] Hero: Ramy beside the headline, with the visible label "Ramy, your research guide buddy!" and a speech bubble showing `ramyMessage`, updated after every data refresh (load, add milestone, status change, add event). One pop-in on load, then a gentle idle bob.
+- [x] Above the roadmap band (the hero keeps only its title and subtitle): Ramy aligned left with the visible label "Ramy, your research guide buddy!" under him, and a floating speech bubble to his right (tail pointing at him) showing `ramyMessage`, updated after every data refresh (load, add milestone, status change, add event). One pop-in on load, then a gentle idle bob; the bubble floats gently.
 - [x] Clicking Ramy cycles to the next useful message (the next matching rule in priority order), then the tips, and wraps around.
 - [x] Reactions: a milestone set to `done` → `celebrate` for about 2 s, then back to the current message; the upcoming list is empty → a small `sleep` Ramy with "Nothing due in the next 30 days."; Research news → `tablet` while loading, `reading` next to the papers, `thinking` with a retry button on error, `shy` when hot topics are unavailable.
-- [x] Size: display height about 96–128 px, `width` and `height` attributes set from each pose's real size, `loading="lazy"` on every Ramy image except the hero one. Under 600 px Ramy is smaller and the bubble sits below the headline.
-- [x] Accessibility: images are decorative (`alt=""`); the bubble text is in an `aria-live="polite"` region; the hero Ramy is a `button` with `aria-label="Ramy, tips"` and a visible focus ring; under `prefers-reduced-motion` there is no bob and no pop-in. All text is rendered with `textContent`.
+- [x] Size: display height about 96–128 px, `width` and `height` attributes set from each pose's real size, `loading="lazy"` on every Ramy image except the main one (above the roadmap). Under 600 px Ramy is smaller and the bubble stays beside him, with no horizontal scroll.
+- [x] Accessibility: images are decorative (`alt=""`); the bubble text is in an `aria-live="polite"` region; the main Ramy is a `button` with `aria-label="Ramy, tips"` and a visible focus ring; under `prefers-reduced-motion` there is no bob, no pop-in and no floating bubble. All text is rendered with `textContent`.
 - [x] Palette and pixel font follow the UI design rules in `CLAUDE.md`: bubble with navy text on `#cdd7d6` (no white: CLAUDE.md forbids it), 2px navy border, coral only as a fill, Pixelify Sans for the label.
 
 ### Tests
 
 - [x] `ramyMessage`: every priority, the ordering between them, and the edge cases above, with a fixed `today` (`TODAY = '2026-11-12'`).
-- [x] DOM tests for each reaction (hero message after load and after a refresh, click cycling, celebrate then revert, empty upcoming sleep, news tablet / reading / thinking + retry / shy), the reduced-motion rule, and `aria` attributes.
+- [x] DOM tests for each reaction (main message after load and after a refresh, click cycling, celebrate then revert, empty upcoming sleep, news tablet / reading / thinking + retry / shy), the reduced-motion rule, and `aria` attributes.
 - [x] A static test that every image referenced by the code exists in `public/mascot/`. No network.
 
 ### Docs and release
@@ -70,9 +70,9 @@ Agents: `devops-engineer` (version 0.3.0 only), `frontend-dev`, `test-writer`, `
 
 ## How to verify (you)
 
-1. `npm run dev`: Ramy pops in beside the headline and says the most useful thing (add an overdue milestone to see "… was due N days ago"). Click him: the message changes.
+1. `npm run dev`: Ramy pops in above the roadmap and his floating bubble says the most useful thing (add an overdue milestone to see "… was due N days ago"). Click him: the message changes.
 2. Set a milestone to done: Ramy celebrates for about 2 s. Open "Research news": he holds a tablet while loading, then reads next to the papers.
-3. Turn on "reduce motion" in your OS: no bob, no pop-in. Narrow the window under 600 px: Ramy shrinks and the bubble moves below the headline.
+3. Turn on "reduce motion" in your OS: no bob, no pop-in, no floating. Narrow the window under 600 px: Ramy shrinks and the bubble stays beside him.
 
 ## Result (filled by the agent)
 

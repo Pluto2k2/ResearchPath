@@ -123,3 +123,65 @@ describe('M11 mascot images exist and match their declared size', () => {
     }
   });
 });
+
+describe('M11 Ramy sits above the roadmap, not in the hero', () => {
+  const hero = /<section class="hero">([\s\S]*?)<\/section>/.exec(html)[1];
+  const view = /<div id="view-roadmap"[^>]*>([\s\S]*?)<section class="roadmap-band"/.exec(html);
+
+  it('keeps only the h1 and the subtitle in the hero', () => {
+    expect(hero).not.toMatch(/ramy/);
+    expect(hero).not.toMatch(/hero-inner/);
+    expect(hero.match(/<(h1|p)[\s>]/g)).toEqual(['<h1>', '<p ']);
+    expect(html).not.toContain('hero-inner');
+  });
+
+  it('puts #ramy inside #view-roadmap, before the roadmap section', () => {
+    expect(view).toBeTruthy();
+    expect(view[1]).toContain('id="ramy"');
+    expect(html.indexOf('id="ramy"')).toBeLessThan(html.indexOf('id="roadmap-section"'));
+    expect(html.indexOf('id="ramy"')).toBeGreaterThan(html.indexOf('</section>'));
+  });
+
+  it('keeps the button, image, label and bubble attributes', () => {
+    expect(html).toContain('id="ramy-button" class="ramy-button" aria-label="Ramy, tips"');
+    const img = ramyImgs.find((t) => t.includes('mascot-idle.png'));
+    expect(img).toMatch(/\salt=""/);
+    expect(img).not.toMatch(/loading=/);
+    expect(html).toContain('Ramy, your research guide buddy!');
+    expect(html).toMatch(/id="ramy-bubble"[^>]*aria-live="polite"/);
+  });
+});
+
+describe('M11 floating speech bubble CSS', () => {
+
+  it('defines ramy-float and applies it to the main bubble', () => {
+    expect(css).toMatch(/@keyframes ramy-float\s*\{/);
+    expect(css).toMatch(/(#ramy|#view-roadmap > \.ramy-hero|\.ramy-hero)\s+\.ramy-bubble\s*\{[^}]*ramy-float/);
+  });
+
+  it('turns ramy-float off under reduced motion together with the button and image', () => {
+    const rm = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+    const rule = /([^{}]*\.ramy-button[^{}]*)\{([^}]*)\}/.exec(rm);
+    expect(rule[1]).toContain('.ramy-bubble');
+    expect(rule[1]).toContain('.ramy-img');
+    expect(rule[2]).toMatch(/animation:\s*none/);
+  });
+
+  it('has a tail made of ::before and ::after', () => {
+    expect(css).toMatch(/\.ramy-bubble::before/);
+    expect(css).toMatch(/\.ramy-bubble::after/);
+  });
+
+  it('uses the card tint and navy text, no white', () => {
+    const rule = [...css.matchAll(/(?:^|\n)\.ramy-bubble\s*\{[^}]*\}/g)].map((m) => m[0]).join('\n');
+    expect(rule).toMatch(/background:\s*(var\(--surface\)|#e6ebea)/i);
+    expect(rule).toMatch(/color:\s*(var\(--navy\)|#102542)/i);
+    expect(rule).not.toMatch(/#fff\b|#ffffff|\bwhite\b/i);
+  });
+
+  it('shrinks Ramy to 96px under 600px and no longer mentions hero-inner', () => {
+    const m = /@media \(max-width:\s*(599|600)px\)\s*\{([\s\S]*?)\n\}/.exec(css);
+    expect(m[2]).toMatch(/\.ramy-img\s*\{[^}]*height:\s*96px/);
+    expect(css).not.toContain('hero-inner');
+  });
+});
