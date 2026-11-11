@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `feature/milestone-status-progress` |
 | **Depends on** | M04 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 

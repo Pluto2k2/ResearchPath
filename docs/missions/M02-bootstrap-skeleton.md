@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `chore/bootstrap-skeleton` |
 | **Depends on** | M01 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
