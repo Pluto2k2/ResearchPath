@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `fix/hardening` |
 | **Depends on** | M08, M09 (v0.2.0 released) |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -50,7 +50,7 @@ Agents: `devops-engineer` (npm scripts, compose, CD workflow, version), `backend
 ### Tests and release
 
 - [x] Every criterion has a test: `.env` loading (the npm scripts contain the flag, compose has `env_file`), 429 after 30 requests and reset after a minute with a fake clock, per-IP separation, other routes not limited, health with and without commit, 413 and other body-parser 4xx, the `headersSent` guard, the done-milestone halo, the event link `rel`. Existing tests stay green; a test is changed only if this mission changes the requirement it checks (say which, and why).
-- [ ] `package.json` version is `0.2.1` (done). The `v0.2.1` tag is created only after the release pull request to `main` is merged, with the user's approval. *Note: tag v0.2.1 after the release PR to main is merged.*
+- [x] `package.json` version is `0.2.1`. The `v0.2.1` tag is created only after the release pull request to `main` is merged, with the user's approval.
 
 ## Out of scope
 
@@ -85,7 +85,8 @@ Agents: `devops-engineer` (npm scripts, compose, CD workflow, version), `backend
 - Lint / tests / build: `npm run lint` is clean. `npm test`: 547 tests passing in 30 files. The Docker image build is not reported here; CI builds the `prod` target on the pull request.
 - Review: no must fix. The should-fix items were applied: the rate limiter runs before body parsing, the proxy hop count is configurable (`TRUST_PROXY_HOPS`), the forced-exit message uses `timeoutMs`, and there is a test for undecodable URL parameters.
 - Deferred to the backlog ("Deferred from the M10 review" in [`docs/missions/README.md`](README.md)): verify Render's proxy hop count after deploy; per-IPv6-address limiting; a second Ctrl+C is ignored during shutdown; an older CD run can time out after two quick merges.
-- Pull request: [TODO: link after push]. The `v0.2.1` tag is not created yet (after the release pull request to `main` is merged, with the user's approval).
+- Pull request: [#17](https://github.com/Pluto2k2/ResearchPath/pull/17); release [#18](https://github.com/Pluto2k2/ResearchPath/pull/18), tag [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) on `6b50605`.
+- Live check: the CD run for #18 logged "Live app reports commit 6b50605…" (https://github.com/Pluto2k2/ResearchPath/actions/runs/43079171611), and `/api/health` returns version `0.2.1` with that commit, so Render sets `RENDER_GIT_COMMIT`.
 
 ## Review notes (filled by you)
 

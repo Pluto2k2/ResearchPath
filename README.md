@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** v0.2.0 released; v0.2.1 (M10, hardening) in review. Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
+> **Status:** v0.2.1 released (M10, hardening). Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -195,9 +195,9 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 
 ## Status and next steps
 
-**Version:** v0.2.0 released; v0.2.1 in review (M10, not yet tagged).
+**Version:** v0.2.1.
 
-**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07) and [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09). Release steps: [`docs/deployment.md`](docs/deployment.md).
+**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07), [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09) and [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) (M10). Release steps: [`docs/deployment.md`](docs/deployment.md).
 
 | Mission | Status |
 |---|---|
@@ -211,7 +211,7 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 | M07 CD and release v0.1.0 | done |
 | M08 Final README | done |
 | M09 US-04 Research news tab (release v0.2.0) | done |
-| M10 Hardening for the public site (release v0.2.1) | in review |
+| M10 Hardening for the public site (release v0.2.1) | done |
 
 **Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
 
