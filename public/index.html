@@ -10,6 +10,10 @@
   <body>
     <header class="site-header">
       <span class="brand">ResearchPath</span>
+      <nav aria-label="Tabs" class="tab-nav">
+        <a href="#/roadmap" data-tab="roadmap">Roadmap</a>
+        <a href="#/news" data-tab="news">Research news</a>
+      </nav>
       <nav aria-label="Sections" class="site-nav">
         <ul>
           <li><a href="#roadmap-section">Roadmap</a></li>
@@ -27,32 +31,64 @@
         <p class="hero-sub">Plan your milestones, track your progress, never miss a conference or funding date.</p>
       </section>
 
-      <section class="roadmap-band" id="roadmap-section" aria-labelledby="roadmap-heading">
-        <h2 id="roadmap-heading">Roadmap</h2>
-        <div id="roadmap" class="roadmap"></div>
-      </section>
-
-      <div class="content">
-        <section id="progress-section" class="card" aria-labelledby="progress-heading">
-          <h2 id="progress-heading">Progress</h2>
-          <p id="progress-text" class="progress-text">0 of 0 milestones done (0%)</p>
-          <div id="progress-bar" class="progress-bar" role="progressbar" aria-labelledby="progress-heading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div id="progress-fill" class="progress-fill"></div>
-          </div>
-          <ul class="progress-counts">
-          <li><span class="status-shape status-todo" aria-hidden="true"></span><span class="progress-status-name">To do</span> <span class="progress-count" id="progress-count-todo">0</span></li>
-          <li><span class="status-shape status-doing" aria-hidden="true"></span><span class="progress-status-name">In progress</span> <span class="progress-count" id="progress-count-doing">0</span></li>
-          <li><span class="status-shape status-done" aria-hidden="true"></span><span class="progress-status-name">Done</span> <span class="progress-count" id="progress-count-done">0</span></li>
-          <li><span class="status-shape status-blocked" aria-hidden="true"></span><span class="progress-status-name">Blocked</span> <span class="progress-count" id="progress-count-blocked">0</span></li>
-          </ul>
+      <div id="view-roadmap" data-view="roadmap">
+        <section class="roadmap-band" id="roadmap-section" aria-labelledby="roadmap-heading">
+          <h2 id="roadmap-heading">Roadmap</h2>
+          <div id="roadmap" class="roadmap"></div>
         </section>
 
-        <section id="upcoming-section" class="card" aria-labelledby="upcoming-heading">
-          <div class="upcoming-head">
-            <h2 id="upcoming-heading">Next 30 days</h2>
-            <button type="button" id="event-add" class="primary" aria-label="Add an event">+ Event</button>
-          </div>
-          <ul id="upcoming-list" class="upcoming-list"></ul>
+        <div class="content">
+          <section id="progress-section" class="card" aria-labelledby="progress-heading">
+            <h2 id="progress-heading">Progress</h2>
+            <p id="progress-text" class="progress-text">0 of 0 milestones done (0%)</p>
+            <div id="progress-bar" class="progress-bar" role="progressbar" aria-labelledby="progress-heading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <ul class="progress-counts">
+            <li><span class="status-shape status-todo" aria-hidden="true"></span><span class="progress-status-name">To do</span> <span class="progress-count" id="progress-count-todo">0</span></li>
+            <li><span class="status-shape status-doing" aria-hidden="true"></span><span class="progress-status-name">In progress</span> <span class="progress-count" id="progress-count-doing">0</span></li>
+            <li><span class="status-shape status-done" aria-hidden="true"></span><span class="progress-status-name">Done</span> <span class="progress-count" id="progress-count-done">0</span></li>
+            <li><span class="status-shape status-blocked" aria-hidden="true"></span><span class="progress-status-name">Blocked</span> <span class="progress-count" id="progress-count-blocked">0</span></li>
+            </ul>
+          </section>
+
+          <section id="upcoming-section" class="card" aria-labelledby="upcoming-heading">
+            <div class="upcoming-head">
+              <h2 id="upcoming-heading">Next 30 days</h2>
+              <button type="button" id="event-add" class="primary" aria-label="Add an event">+ Event</button>
+            </div>
+            <ul id="upcoming-list" class="upcoming-list"></ul>
+          </section>
+        </div>
+      </div>
+
+      <div id="view-news" data-view="news" class="content" hidden>
+        <p id="news-error" class="form-error" role="alert"></p>
+
+        <section id="interests-section" class="card" aria-labelledby="interests-heading">
+          <h2 id="interests-heading">Your interests</h2>
+          <div id="category-chips" class="chips" role="group" aria-label="arXiv categories"></div>
+          <form id="keyword-form" class="keyword-form" novalidate>
+            <label for="keyword-input">Add a keyword</label>
+            <div class="keyword-row">
+              <input id="keyword-input" type="text" maxlength="50" autocomplete="off" />
+              <button type="submit" class="primary">Add</button>
+            </div>
+          </form>
+          <ul id="keyword-list" class="keyword-list"></ul>
+        </section>
+
+        <p id="news-empty" class="news-empty">Pick a category or add a keyword to see the latest papers and hot topics.</p>
+        <p id="news-loading" class="news-loading" role="status" hidden>Loading...</p>
+
+        <section id="papers-section" class="card" aria-labelledby="papers-heading" hidden>
+          <h2 id="papers-heading">Latest papers</h2>
+          <ul id="papers-list" class="papers-list"></ul>
+        </section>
+
+        <section id="topics-section" class="card" aria-labelledby="topics-heading" hidden>
+          <h2 id="topics-heading">Hot topics</h2>
+          <ul id="topics-list" class="topics-list"></ul>
         </section>
       </div>
     </main>
