@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `feature/ramy-mascot` |
 | **Depends on** | M10 (v0.2.1 released) |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 
@@ -83,15 +83,18 @@ Agents: `devops-engineer` (version 0.3.0 only), `frontend-dev`, `test-writer`, `
   `docs/missions/README.md`. `src/**` is unchanged.
 - Tests added: `tests/ramy.test.js`, `tests/ramy.dom.test.js`, `tests/ramy-static.test.js`. Existing tests
   changed because the version changed: `tests/news-ui.test.js`, `tests/hardening-config.test.js`.
-  Suite: 33 files, 638 tests passing (was 547 in 30 files after M10).
-- Lint / tests / build: lint clean; `npm test` 638 passing in 33 files. `docker build --target prod` OK; the
+  Suite: 33 files, 648 tests passing (was 547 in 30 files after M10).
+- Lint / tests / build: lint clean; `npm test` 648 passing in 33 files. `docker build --target prod` OK; the
   container answers `/api/health` with version 0.3.0, serves `/mascot/mascot-idle.png` (200), and the page
   contains the Ramy button.
 - Decisions: the tip texts (6 tips), "Well done, one more milestone finished!", the news lines "Fetching the
   latest papers...", "Here are the latest papers for you.", "I couldn't load the papers. Try again?" and
   "Hot topics are unavailable right now.", "Untitled" for a milestone without a title, and a 40-character
   title limit. Ramy shows the first tip before data loads. Days are computed on the client from the dates
-  (the server's `daysLeft` is ignored). The bubble uses `#cdd7d6` (no white, per CLAUDE.md).
+  (the server's `daysLeft` is ignored). No white (per CLAUDE.md).
+- Design change after review (user): Ramy moved from the hero to just above the roadmap band, with a
+  floating speech bubble beside him (`#e6ebea` card tint, tail pointing at him, gentle float, off under
+  reduced motion); the hero keeps only its title and subtitle. +10 tests (648 in total).
 - Review: no must fix. Should fix, applied: no "add your first milestone" message when loading milestones
   fails; the bubble is re-announced only when its text changes; retry keeps keyboard focus (it moves to the
   papers heading); focus after adding a milestone returns as before; release labels in the docs fixed. Extra
@@ -100,7 +103,8 @@ Agents: `devops-engineer` (version 0.3.0 only), `frontend-dev`, `test-writer`, `
   pose swap downloads a second PNG on first view, and `celebrate` may flash on first use (no preload);
   `shortTitle` can cut a ZWJ emoji sequence or flag (`Intl.Segmenter` would fix it); Ramy keeps the last good
   progress and upcoming data after a failed refresh.
-- Pull request: [TODO: link after push]
+- Pull request: [#20](https://github.com/Pluto2k2/ResearchPath/pull/20); release [#21](https://github.com/Pluto2k2/ResearchPath/pull/21), tag [v0.3.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.3.0) on `696dc4a`.
+- Live check: `/api/health` returns version `0.3.0` with commit `696dc4a`, and `/mascot/mascot-idle.png` answers 200 on https://researchpath.onrender.com.
 
 ## Review notes (filled by you)
 

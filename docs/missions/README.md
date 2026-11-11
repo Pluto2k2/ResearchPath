@@ -22,7 +22,7 @@ New missions follow [`_template.md`](_template.md).
 | M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07, M09 | docs | done |
 | M09 | [Research news tab](M09-research-news.md) | US-04 | `feature/research-news` | M07 | devops, backend, frontend, test | done |
 | M10 | [Hardening for the public site (release v0.2.1)](M10-hardening.md) | — | `fix/hardening` | M08, M09 | devops, backend, frontend, test | done |
-| M11 | [Ramy, your research guide buddy! (release v0.3.0)](M11-ramy-mascot.md) | — | `feature/ramy-mascot` | M10 | frontend, test, devops, docs | in review |
+| M11 | [Ramy, your research guide buddy! (release v0.3.0)](M11-ramy-mascot.md) | — | `feature/ramy-mascot` | M10 | frontend, test, devops, docs | done |
 
 Every mission also goes through `mission-planner`, `code-reviewer` and `docs-writer`
 (see "Agent team" in [`CLAUDE.md`](../../CLAUDE.md)).
