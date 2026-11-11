@@ -136,6 +136,7 @@ html {
 
 #roadmap-section,
 #progress-section,
+#upcoming-section,
 .content {
   scroll-margin-top: 4.5rem;
 }
@@ -504,6 +505,98 @@ h2 {
   font-size: 1.2rem;
 }
 
+/* ---- Upcoming card ---- */
+
+#upcoming-section {
+  margin-top: 1.5rem;
+}
+
+.upcoming-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.upcoming-head h2 {
+  margin: 0;
+}
+
+.upcoming-head button.primary {
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.upcoming-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.upcoming-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 0.6rem 0;
+  border-top: 2px solid var(--ink-faint);
+  transition: background-color 0.15s steps(3);
+}
+
+.upcoming-item:hover {
+  background: var(--ink-faint);
+}
+
+.upcoming-date {
+  min-width: 4.5rem;
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.upcoming-kind,
+.upcoming-flag {
+  padding: 0.1rem 0.5rem;
+  font-family: var(--pixel-font);
+  font-size: 0.85rem;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Coral fill with navy text, never coral text. */
+.upcoming-flag {
+  font-weight: 700;
+  background: var(--accent);
+}
+
+.upcoming-title {
+  flex: 1 1 10rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.upcoming-days {
+  font-family: var(--pixel-font);
+  color: var(--ink-soft);
+}
+
+.upcoming-item.overdue .upcoming-date,
+.upcoming-item.overdue .upcoming-days {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline solid var(--accent) 3px;
+  text-underline-offset: 3px;
+}
+
+.upcoming-empty {
+  padding-top: 0.5rem;
+}
+
 /* ---- Popovers ---- */
 
 .popover {
@@ -608,6 +701,7 @@ form label {
 }
 
 form input,
+form select,
 form textarea {
   display: block;
   width: 100%;
@@ -667,7 +761,8 @@ button.primary:disabled {
     scroll-behavior: auto;
   }
 
-  .progress-fill {
+  .progress-fill,
+  .upcoming-item {
     transition: none;
   }
 

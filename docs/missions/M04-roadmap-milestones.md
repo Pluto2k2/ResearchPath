@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `feature/roadmap-milestones` |
 | **Depends on** | M03 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 

@@ -14,6 +14,7 @@
         <ul>
           <li><a href="#roadmap-section">Roadmap</a></li>
           <li><a href="#progress-section">Progress</a></li>
+          <li><a href="#upcoming-section">Upcoming</a></li>
         </ul>
       </nav>
       <button type="button" id="header-add" class="primary header-add">+ Milestone</button>
@@ -45,6 +46,14 @@
           <li><span class="status-shape status-blocked" aria-hidden="true"></span><span class="progress-status-name">Blocked</span> <span class="progress-count" id="progress-count-blocked">0</span></li>
           </ul>
         </section>
+
+        <section id="upcoming-section" class="card" aria-labelledby="upcoming-heading">
+          <div class="upcoming-head">
+            <h2 id="upcoming-heading">Next 30 days</h2>
+            <button type="button" id="event-add" class="primary" aria-label="Add an event">+ Event</button>
+          </div>
+          <ul id="upcoming-list" class="upcoming-list"></ul>
+        </section>
       </div>
     </main>
 
@@ -62,6 +71,34 @@
         <textarea id="milestone-notes" name="notes" rows="3"></textarea>
 
         <button type="submit" class="primary">Add milestone</button>
+      </form>
+    </div>
+
+    <div id="event-popover" class="popover card" role="dialog" aria-labelledby="event-heading" tabindex="-1" hidden>
+      <button type="button" class="popover-close" aria-label="Close">&times;</button>
+      <h2 id="event-heading" class="popover-title">Add an event</h2>
+      <form id="event-form" novalidate>
+        <label for="event-title">Title</label>
+        <input id="event-title" name="title" type="text" autocomplete="off" />
+
+        <label for="event-type">Type</label>
+        <select id="event-type" name="type">
+          <option value="conference">Conference</option>
+          <option value="seminar">Seminar</option>
+          <option value="deadline">Deadline</option>
+          <option value="funding">Funding call</option>
+        </select>
+
+        <label for="event-date">Date</label>
+        <input id="event-date" name="date" type="date" />
+
+        <label for="event-url">URL</label>
+        <input id="event-url" name="url" type="url" autocomplete="off" />
+
+        <label for="event-notes">Notes</label>
+        <textarea id="event-notes" name="notes" rows="3"></textarea>
+
+        <button type="submit" class="primary">Add event</button>
       </form>
     </div>
   </body>

@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) + You (GitHub settings) |
 | **Branch** | `ci/github-actions` |
 | **Depends on** | M02 |
-| **Status** | in review |
+| **Status** | done |
 
 ## Context
 

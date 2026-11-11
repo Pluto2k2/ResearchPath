@@ -32,6 +32,13 @@ export function countMilestonesByStatus(db) {
     .map((row) => ({ status: row.status, count: row.count }));
 }
 
+export function listOpenMilestonesUntil(db, to) {
+  return db
+    .prepare("SELECT * FROM milestones WHERE status <> 'done' AND target_date <= ? ORDER BY target_date ASC, id ASC")
+    .all(to)
+    .map(toMilestone);
+}
+
 export function listMilestones(db) {
   return db
     .prepare('SELECT * FROM milestones ORDER BY target_date ASC, created_at ASC, id ASC')

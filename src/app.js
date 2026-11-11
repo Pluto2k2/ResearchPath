@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { healthRouter } from './routes/health.js';
 import { milestonesRouter } from './routes/milestones.js';
 import { progressRouter } from './routes/progress.js';
+import { eventsRouter } from './routes/events.js';
+import { upcomingRouter } from './routes/upcoming.js';
 
 // Resolved from this file, not the cwd, so it works wherever the server starts.
 const publicDir = fileURLToPath(new URL('../public', import.meta.url));
@@ -31,6 +33,8 @@ export function createApp({ db, now }) {
   app.use('/api', healthRouter);
   app.use('/api', milestonesRouter);
   app.use('/api', progressRouter);
+  app.use('/api', eventsRouter);
+  app.use('/api', upcomingRouter);
   app.use('/api', notFoundHandler);
   app.use(express.static(publicDir));
   app.use(errorHandler);

@@ -29,6 +29,7 @@ async function loadPage({ patch, progress = () => reply(200, PROGRESS) } = {}) {
   globalThis.fetch = vi.fn(async (url, options) => {
     if (options?.method === 'PATCH') return patch(url, options);
     if (String(url).startsWith('/api/progress')) return progress();
+    if (String(url).startsWith('/api/upcoming')) return reply(200, []);
     return reply(200, MILESTONES);
   });
   vi.resetModules();
@@ -113,8 +114,11 @@ describe('US-02 progress card', () => {
 
   it('shows the generic message when the progress response is malformed', async () => {
     document.body.innerHTML = bodyHtml;
-    globalThis.fetch = vi.fn(async (url) =>
-      String(url).startsWith('/api/progress') ? reply(200, { total: 'x' }) : reply(200, MILESTONES));
+    globalThis.fetch = vi.fn(async (url) => {
+      if (String(url).startsWith('/api/progress')) return reply(200, { total: 'x' });
+      if (String(url).startsWith('/api/upcoming')) return reply(200, []);
+      return reply(200, MILESTONES);
+    });
     vi.resetModules();
     await import('../public/app.js');
     await vi.waitFor(() => expect(errorText()).toBe('Something went wrong. Please try again.'));

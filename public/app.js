@@ -1,6 +1,7 @@
 import { localToday } from './dates.js';
 import { bindPopover, renderRoadmap } from './roadmap.js';
 import { STATUS_VALUES } from './status.js';
+import { renderUpcoming } from './upcoming.js';
 
 const GENERIC_ERROR = 'Something went wrong. Please try again.';
 const NETWORK_ERROR = 'Network error. Check your connection and try again.';
@@ -16,6 +17,13 @@ const addPopoverController = bindPopover(
   addPopover.querySelector('.popover-close'),
   { fallback: () => roadmap.querySelector('.add-node') },
 );
+
+const upcomingList = document.querySelector('#upcoming-list');
+const eventAdd = document.querySelector('#event-add');
+const eventForm = document.querySelector('#event-form');
+const eventSubmit = eventForm.querySelector('button[type="submit"]');
+const eventPopover = document.getElementById('event-popover');
+const eventPopoverController = bindPopover(eventPopover, eventPopover.querySelector('.popover-close'));
 
 const headerAdd = document.querySelector('#header-add');
 let milestones = [];
@@ -111,6 +119,57 @@ async function loadProgress() {
   }
 }
 
+// Same latest-request-wins rule as loadProgress. Never throws.
+let upcomingRequest = 0;
+
+async function loadUpcoming() {
+  const mine = ++upcomingRequest;
+  try {
+    const res = await fetch('/api/upcoming');
+    if (!res.ok) throw new Error(await readError(res));
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error(GENERIC_ERROR);
+    if (mine === upcomingRequest) renderUpcoming(upcomingList, data);
+  } catch (err) {
+    if (mine !== upcomingRequest) return;
+    errorBox.textContent = err instanceof TypeError ? NETWORK_ERROR : err.message || GENERIC_ERROR;
+  }
+}
+
+async function onEventSubmit(event) {
+  event.preventDefault();
+  errorBox.textContent = '';
+  const payload = {
+    title: eventForm.elements.title.value,
+    type: eventForm.elements.type.value,
+    date: eventForm.elements.date.value,
+    url: eventForm.elements.url.value,
+    notes: eventForm.elements.notes.value,
+  };
+  eventSubmit.disabled = true;
+  try {
+    const res = await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      // Typed values stay in the form for the next try.
+      showError(await readError(res));
+      eventPopoverController.close();
+      return;
+    }
+    eventForm.reset();
+    eventPopoverController.close();
+    await loadUpcoming();
+  } catch {
+    showError(NETWORK_ERROR);
+    eventPopoverController.close();
+  } finally {
+    eventSubmit.disabled = false;
+  }
+}
+
 // The popover is far from the message at the top, so scroll it into view.
 function showError(message) {
   errorBox.textContent = message;
@@ -133,7 +192,7 @@ async function changeStatus(id, status) {
     const updated = await res.json();
     milestones = milestones.map((m) => (m.id === updated.id ? updated : m));
     draw();
-    await loadProgress();
+    await Promise.all([loadProgress(), loadUpcoming()]);
     return updated;
   } catch {
     showError(NETWORK_ERROR);
@@ -178,6 +237,7 @@ async function onSubmit(event) {
     form.reset();
     await loadRoadmap();
     loadProgress();
+    loadUpcoming();
     focusOpener();
   } catch {
     // fetch itself threw (offline): same handling as an API error.
@@ -198,5 +258,11 @@ window.addEventListener('resize', () => {
 
 headerAdd.addEventListener('click', () => toggleAdd(headerAdd));
 form.addEventListener('submit', onSubmit);
+eventAdd.addEventListener('click', () => {
+  if (eventPopoverController.isOpenFor(eventAdd)) eventPopoverController.close();
+  else eventPopoverController.open(eventAdd);
+});
+eventForm.addEventListener('submit', onEventSubmit);
 loadRoadmap();
 loadProgress();
+loadUpcoming();
