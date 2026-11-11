@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `docs/project-setup` |
 | **Depends on** | none |
-| **Status** | in progress |
+| **Status** | done |
 
 ## Context
 
@@ -16,10 +16,10 @@ mission can be run with `/mission` and reviewed on its own.
 
 ## Acceptance criteria
 
-- [ ] `README.md` has 5 sections: What it is / Features (user stories, MVP vs backlog) / How to run it / How it was built with AI / Status and next steps.
-- [ ] `CLAUDE.md` has the description, the stack, the planned architecture, the conventions and the working rules (git workflow, Conventional Commits, DevContainer + Docker, no secrets, plan before code).
-- [ ] `CLAUDE.md` has an "Agent team" section: each agent's files and job, and the orchestration rules.
-- [ ] `docs/missions/` has one file per mission following `_template.md`, and an index `docs/missions/README.md`.
+- [x] `README.md` has 5 sections: What it is / Features (user stories, MVP vs backlog) / How to run it / How it was built with AI / Status and next steps.
+- [x] `CLAUDE.md` has the description, the stack, the planned architecture, the conventions and the working rules (git workflow, Conventional Commits, DevContainer + Docker, no secrets, plan before code).
+- [x] `CLAUDE.md` has an "Agent team" section: each agent's files and job, and the orchestration rules.
+- [x] `docs/missions/` has one file per mission following `_template.md`, and an index `docs/missions/README.md`.
 
 ## Out of scope
 
