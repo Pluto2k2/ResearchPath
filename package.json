@@ -1,6 +1,6 @@
 {
   "name": "researchpath",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Roadmap and 30-day agenda for PhD students",
