@@ -19,7 +19,7 @@ New missions follow [`_template.md`](_template.md).
 | M05 | [Milestone status and overall progress](M05-milestone-status-progress.md) | US-02 | `feature/milestone-status-progress` | M04 | backend, frontend, test | done |
 | M06 | [Events and the next 30 days](M06-events-next-30-days.md) | US-03 | `feature/events-next-30-days` | M05 | backend, frontend, test | done |
 | M07 | [Continuous deployment and release v0.1.0](M07-cd-release.md) | — | `ci/cd-release` | M06 | devops | done |
-| M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07 | docs | todo |
+| M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07, M09 | docs | done |
 | M09 | [Research news tab](M09-research-news.md) | US-04 | `feature/research-news` | M07 | devops, backend, frontend, test | done |
 
 Every mission also goes through `mission-planner`, `code-reviewer` and `docs-writer`
@@ -30,6 +30,8 @@ Every mission also goes through `mission-planner`, `code-reviewer` and `docs-wri
 US-05 events and opportunities board (v0.2); US-06 draft sharing with peers, US-07 accounts
 (v0.3). US-04 left the backlog with M09 (research news tab, on-demand, not a daily digest). See
 [`docs/mvp-scope.md`](../mvp-scope.md).
+
+`.env` is not loaded by the app or `docker compose` (found in M08): `cp .env.example .env` and the PORT written by `scripts/new-worktree.sh` have no effect. Fix: `node --env-file-if-exists=.env` in the npm scripts, or `env_file` in `docker-compose.yml`.
 
 Body-parser `entity.too.large` returns 500 instead of 413 (found in M04 review; the M02 review flagged the same for every 4xx body-parser error).
 

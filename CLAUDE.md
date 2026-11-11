@@ -243,4 +243,4 @@ coordinates the agents and talks to the user, and it does not write application 
 
 - `/pre-push-review`: review of the pending changes before a push.
 - `scripts/ai-review.sh [base]`: headless review of the branch with `code-reviewer`.
-- `scripts/new-worktree.sh <branch> [port]`: a git worktree per mission, with its own `.env` and port, to run two missions side by side.
+- `scripts/new-worktree.sh <branch> [port]`: a git worktree per mission, to run two missions side by side. It writes `PORT=<port>` to a `.env`, but nothing loads `.env` yet (backlog), so start it with `PORT=<port> npm run dev`.
