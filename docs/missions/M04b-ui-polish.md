@@ -77,6 +77,6 @@ Visual reference, read only (ignore its status, progress and upcoming parts):
 
 ## Review notes (filled by you)
 
-- What I checked: [TODO: what you checked in the browser and on a phone-width window]
-- What I asked the agent to change: [TODO: your review requests, if any; the contrast change for overdue dates is already recorded above as a user decision]
-- What was hard / what I learned: [TODO: your own experience of this mission]
+- What I checked: The wavy roadmap in a desktop and a phone-width window, the palette and the pixel font.
+- What I asked the agent to change: A left-aligned title with a nav bar, a full-width roadmap, a large two-colour headline, and the navy / coral / grey-blue palette, with coral used only as a fill for contrast (the overdue-date change is recorded above).
+- What was hard / what I learned: Visual design took several iterations, and contrast has to be measured: coral on grey-blue is about 1.9:1, so it cannot carry text.

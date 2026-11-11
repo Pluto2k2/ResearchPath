@@ -120,6 +120,6 @@ Agents: `devops-engineer` (new dependency `fast-xml-parser`, version 0.2.0, `.en
 
 ## Review notes (filled by you)
 
-- What I checked: [TODO: what you checked by hand, e.g. the manual check steps above]
-- What I asked the agent to change: [TODO: changes you asked for, if any]
-- What was hard / what I learned: [TODO: what was hard or what you learned in this mission]
+- What I checked: The Research news tab locally and on the live site (20 papers and the hot topics), and that my interests survive a reload.
+- What I asked the agent to change: Official APIs instead of scraping, and running the mission with the full agent team.
+- What was hard / what I learned: A stale Claude Code session answered from old context and proposed the wrong branch. I now run `/clear` before every mission.

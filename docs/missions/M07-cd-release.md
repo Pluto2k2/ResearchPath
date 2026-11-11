@@ -93,6 +93,6 @@ Steps for these checks: [`docs/deployment.md`](../deployment.md).
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: The CD run (publish, then deploy), the image in GitHub Container Registry, the Render deploy and the live `/api/health`.
+- What I asked the agent to change: Deploy only from `main`, warn instead of failing when the deploy hook is missing, and wait up to 15 minutes for the health check.
+- What was hard / what I learned: I first stored the deploy hook as an environment secret instead of a repository secret, and release PR #10 reached `main` before M07 was merged, so CD was missing until PR #12. Release order matters.

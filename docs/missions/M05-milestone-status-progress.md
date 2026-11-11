@@ -68,6 +68,6 @@ shows where I really stand.* Agents: `backend-dev`, `frontend-dev` (in parallel)
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: Status changes from the popover, the progress bar and the count per status.
+- What I asked the agent to change: Fix the review's must-fix item (a corrupted check-mark glyph).
+- What was hard / what I learned: Later I noticed that a done milestone in the past still showed the overdue halo; I recorded it and it was fixed in M10.

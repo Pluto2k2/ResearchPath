@@ -22,7 +22,7 @@ New missions follow [`_template.md`](_template.md).
 | M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07, M09 | docs | done |
 | M09 | [Research news tab](M09-research-news.md) | US-04 | `feature/research-news` | M07 | devops, backend, frontend, test | done |
 | M10 | [Hardening for the public site (release v0.2.1)](M10-hardening.md) | — | `fix/hardening` | M08, M09 | devops, backend, frontend, test | done |
-| M11 | [Ramy, your research guide buddy! (release v0.3.0)](M11-ramy-mascot.md) | — | `feature/ramy-mascot` | M10 | frontend, test, devops, docs | in review |
+| M11 | [Ramy, your research guide buddy! (release v0.3.0)](M11-ramy-mascot.md) | — | `feature/ramy-mascot` | M10 | frontend, test, devops, docs | done |
 
 Every mission also goes through `mission-planner`, `code-reviewer` and `docs-writer`
 (see "Agent team" in [`CLAUDE.md`](../../CLAUDE.md)).
@@ -48,3 +48,5 @@ Deferred from the M07 review: CD does not run lint or tests (rule for now: tag o
 Deferred from the M10 review: verify Render's proxy hop count after deploy (check `req.ips`; raise `TRUST_PROXY_HOPS` if all users share one bucket); per-IPv6-address limiting lets a client rotate within its /64; a second Ctrl+C is ignored during shutdown; an older CD run can time out after two quick merges to `main` (Render deploys the latest `main`).
 
 Deferred from the M11 review: two announcements while news loads (`#news-loading` and the news bubble); the pose swap downloads a second PNG on first view, and `celebrate` may flash on first use (no preload); `shortTitle` can cut a ZWJ emoji sequence or flag (`Intl.Segmenter` would fix it); Ramy keeps the last good progress and upcoming data after a failed refresh.
+
+Found during the final wrap-up: on a 390 px wide phone, the "Ramy, your research guide buddy!" label is clipped on the left (the negative side margins on `.ramy-hero .ramy-label`).

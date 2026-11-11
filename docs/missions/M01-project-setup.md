@@ -51,6 +51,6 @@ Don't write any application code yet. Show me the files before committing.
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: README structure (the five report sections), the `CLAUDE.md` rules, the seven agent definitions and the mission files.
+- What I asked the agent to change: Confirmed the six setup decisions the agent raised, and aligned the mission file names with the index.
+- What was hard / what I learned: Git was not configured on my machine, and M01 stayed on its branch when M02 started, so the next pull request had nothing to compare. Every mission must reach `develop` through its own pull request before the next one begins.

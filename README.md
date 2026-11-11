@@ -3,7 +3,9 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** v0.2.1 released (M10, hardening). Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
+> **Status:** v0.3.0 released (M11, Ramy). Milestones, status and progress, the next 30 days (v0.1.0), the research news tab (v0.2.0, M09) and Ramy, your research guide buddy (v0.3.0, M11) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
+
+![ResearchPath: Ramy, the wavy roadmap, overall progress and the next 30 days](docs/screenshots/roadmap.png)
 
 ## What it is
 
@@ -55,11 +57,15 @@ from OpenAlex for the last 365 days. It is on demand, not a daily digest.
 - `GET /api/news/topics?categories=...&q=...` returns the top 10 OpenAlex topics with their counts.
 - At least one of `categories` or `q` is required. Both endpoints are cached on the server for 30 minutes. When an upstream API fails or times out, the endpoint returns `502` with a message.
 
-**Ramy, your research guide buddy (M11, release v0.3.0, in review):** a mascot standing above the roadmap, with a floating speech bubble.
+![Research news tab: interests, latest arXiv papers and hot OpenAlex topics (live data)](docs/screenshots/news.png)
+
+**Ramy, your research guide buddy (M11, release v0.3.0):** a mascot standing above the roadmap, with a floating speech bubble.
 His speech bubble says the most useful thing right now: an overdue milestone, a deadline within 7 days, a progress
 step (25, 50, 75 or 100 %), or a tip. Clicking Ramy shows the next message. He reacts to a finished milestone, to an
 empty next-30-days list, and to the Research news tab (loading, errors, hot topics unavailable). Mission:
-[M11](docs/missions/M11-ramy-mascot.md). PR: [TODO: link after push].
+[M11](docs/missions/M11-ramy-mascot.md). PR: [#20](https://github.com/Pluto2k2/ResearchPath/pull/20).
+
+![Ramy pointing out the next deadline](docs/screenshots/ramy.png)
 
 Full scope: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
@@ -134,6 +140,19 @@ https://researchpath.onrender.com.
   live app reports no commit, it warns and checks the status only. A `v*` tag publishes a
   versioned image (`0.1.0`, `0.2.0`) and does not deploy.
 - Render builds the repository from source. The GHCR image is a versioned artifact, not what Render runs.
+- **Branch protection:** a GitHub ruleset on `main` and `develop` requires a pull request and both CI
+  checks (`lint-and-test`, `docker-build`), blocks force pushes and deletions, and has no bypass.
+
+| CI on a pull request | CD on `main` |
+|---|---|
+| ![CI run on PR #20: lint-and-test (648 tests) and docker-build green](docs/screenshots/ci-green.png) | ![CD run after release PR #21: publish then deploy, both green](docs/screenshots/cd-deploy.png) |
+
+<details>
+<summary>Ruleset "protect main and develop" (screenshot)</summary>
+
+![Ruleset: pull request required, lint-and-test and docker-build required, force pushes and deletions blocked, empty bypass list](docs/screenshots/branch-protection.png)
+
+</details>
 
 Set-up steps, production settings and the release steps are in [`docs/deployment.md`](docs/deployment.md).
 The free plan has no persistent disk: the live app is a demo, and its data is lost on every redeploy.
@@ -143,6 +162,7 @@ The free plan has no persistent disk: the live app is a demo, and its data is lo
 ResearchPath is built with [Claude Code](https://claude.com/claude-code) working as a small
 team of specialised subagents, under human review at every step.
 
+- **Planning:** I used Claude in a chat as a mentor to scope the MVP, split the work into missions and draft the kickoff prompts; Claude Code's agents implemented each mission, and I reviewed and tried every result before merging.
 - **Rules:** [`CLAUDE.md`](CLAUDE.md) holds the stack, architecture, conventions and working rules every agent follows.
 - **Missions:** the work is split into small missions in [`docs/missions/`](docs/missions/README.md), each with acceptance criteria, an out-of-scope list and a manual check.
 - **Agent team** (`.claude/agents/`), with model and ownership:
@@ -177,7 +197,7 @@ team of specialised subagents, under human review at every step.
 | M06 Events and next 30 days | 300 | 16 |
 | M09 Research news | 482 | 23 |
 | M10 Hardening (v0.2.1) | 547 | 30 |
-| M11 Ramy mascot (v0.3.0) | 638 | 33 |
+| M11 Ramy mascot (v0.3.0) | 648 | 33 |
 
 M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAlex) and use a fake clock.
 
@@ -185,7 +205,57 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
   check-mark glyph), fixed and tested; M06 and M07 had no must fix. M09 had 2 must fix and 6 should fix, all fixed. M10 had no must fix and 4 should fix, all fixed. M11 had no must fix and 5 should fix, all fixed.
 - **Dependencies approved by the human:** `@eslint/js` and `globals` (M02), `happy-dom` (M04b), `fast-xml-parser` (M09).
 
-The Ramy sprite sheet was created by me with an AI image generator.
+The Ramy sprite sheet was created by me with an AI image generator, then cut into 19 transparent poses (all at the
+same scale, purple accents recoloured to the palette's coral) with Claude before M11.
+
+### Real prompts
+
+Each mission started with one kickoff prompt in Claude Code. `mission-planner` turned it into the mission file, and
+`/mission` ran the agent team on it. Two of the prompts I used, shortened:
+
+**M09, Research news** (result: [M09](docs/missions/M09-research-news.md), PR [#13](https://github.com/Pluto2k2/ResearchPath/pull/13)):
+
+```text
+Write a new mission docs/missions/M09-research-news.md (use _template.md and the mission-planner agent),
+then run it with the agent team (/mission). Stop and ask me only if a decision is really mine.
+
+Goal: a second tab "Research news" where a PhD student picks their interests and sees (1) the latest
+papers and (2) the hot topics in their field, from reliable sources through official APIs (no HTML scraping).
+- Latest papers: GET /api/news/papers → arXiv API, newest first, max 20. Respect arXiv's limit
+  (max 1 request every 3 s) and cache server-side. Parse the Atom XML with a maintained parser, not regex.
+- Hot topics: GET /api/news/topics → OpenAlex works grouped by topic, top 10 with counts.
+- Errors: upstream timeout or failure → 502; the UI shows a friendly error and a retry button.
+- Security: allow-list categories, limit keyword length, render with textContent, only arxiv.org links.
+- Tests: no network in tests or CI. Inject fetch through createApp and use small fixtures.
+Out of scope: accounts, saving interests on the server, notifications.
+Done when: lint, all tests and docker build pass and code-reviewer has no blocking issues.
+```
+
+What the agents did with it: the backend and frontend agents worked in parallel once the API contract was fixed,
+`code-reviewer` found 2 must-fix and 6 should-fix items (all fixed), and the final design uses OpenAlex's optional
+`mailto` setting instead of an API key.
+
+**M11, Ramy** (result: [M11](docs/missions/M11-ramy-mascot.md), PR [#20](https://github.com/Pluto2k2/ResearchPath/pull/20)):
+
+```text
+Write a new mission docs/missions/M11-ramy-mascot.md (use _template.md and the mission-planner agent),
+then run it with the agent team (/mission).
+
+Goal: a mascot named Ramy that gives the app character and tells the user, in one short sentence,
+the most useful thing about their research right now.
+Ramy's brain: a pure function ramyMessage({ milestones, progress, upcoming, today }) returning
+{ pose, text }. Priority: overdue milestone > deadline within 7 days > progress step reached
+(25/50/75/100%) > no milestones > a random tip. No DOM or fetch inside it, so it can be reused
+later for email reminders. Fully unit-tested with a fixed today.
+UI: Ramy with a speech bubble updated after every data refresh; reactions to a finished milestone,
+an empty next-30-days list and the Research news tab.
+Accessibility: decorative images, bubble text in an aria-live region, prefers-reduced-motion respected.
+Out of scope: login, email sending, any backend change.
+```
+
+What the agents did with it: `ramyMessage` became a pure module with its own unit tests (648 tests in total
+afterwards), and after trying it in the browser I asked for one change: Ramy moved above the roadmap with a floating
+speech bubble.
 
 **What worked well**
 
@@ -204,9 +274,9 @@ The Ramy sprite sheet was created by me with an AI image generator.
 
 ## Status and next steps
 
-**Version:** v0.2.1.
+**Version:** v0.3.0.
 
-**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07), [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09) and [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) (M10). Release steps: [`docs/deployment.md`](docs/deployment.md).
+**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07), [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09), [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) (M10) and [v0.3.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.3.0) (M11). Release steps: [`docs/deployment.md`](docs/deployment.md).
 
 | Mission | Status |
 |---|---|
@@ -221,7 +291,7 @@ The Ramy sprite sheet was created by me with an AI image generator.
 | M08 Final README | done |
 | M09 US-04 Research news tab (release v0.2.0) | done |
 | M10 Hardening for the public site (release v0.2.1) | done |
-| M11 Ramy, your research guide buddy (release v0.3.0) | in review |
+| M11 Ramy, your research guide buddy (release v0.3.0) | done |
 
 **Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (later) arrive.
 
@@ -233,6 +303,7 @@ The Ramy sprite sheet was created by me with an AI image generator.
 - **News:** `/api/news/*` is limited to 30 requests per minute per IP, and the arXiv request queue is uncapped.
 - **Deferred from the M10 review:** Render's proxy hop count is not yet verified (check `req.ips` after a deploy); IPv6 clients are limited per address, so a client can rotate within its /64; a second Ctrl+C is ignored during shutdown.
 - **Audit:** `npm audit` reports 4 moderate warnings in the dev dependencies (ESLint / minimatch).
+- **Small screens:** on a 390 px wide phone, the "Ramy, your research guide buddy!" label is clipped on the left (found during the final check).
 
 The full list of items deferred from reviews is in [`docs/missions/README.md`](docs/missions/README.md).
 
