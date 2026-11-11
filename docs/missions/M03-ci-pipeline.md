@@ -76,6 +76,6 @@ Notes:
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: CI runs on every pull request, both jobs pass, and the ruleset blocks the merge until `lint-and-test` and `docker-build` are green.
+- What I asked the agent to change: Add a smoke test that starts the production container and calls `/api/health`.
+- What was hard / what I learned: Required checks are what make agent-written code safe to merge: nothing reaches `develop` or `main` without them.
