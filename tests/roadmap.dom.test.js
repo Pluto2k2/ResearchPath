@@ -20,10 +20,13 @@ const MILESTONE = {
 
 async function loadPage(milestones) {
   document.body.innerHTML = bodyHtml;
-  globalThis.fetch = vi.fn(async () => ({
+  globalThis.fetch = vi.fn(async (url) => ({
     ok: true,
     status: 200,
-    json: async () => milestones,
+    json: async () =>
+      String(url).startsWith('/api/progress')
+        ? { total: milestones.length, done: 0, percent: 0, byStatus: { todo: milestones.length, doing: 0, done: 0, blocked: 0 } }
+        : milestones,
   }));
   vi.resetModules();
   await import('../public/app.js');
