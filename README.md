@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** v0.2.0 released. Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
+> **Status:** v0.2.0 released; v0.2.1 (M10, hardening) in review. Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -75,15 +75,21 @@ npm test               # Vitest + Supertest
 npm run lint           # ESLint
 ```
 
-**Settings are not read from `.env` automatically.** Nothing loads a `.env` file: there is no
-dotenv, no `--env-file` flag, and `docker compose` has no `env_file`. [`.env.example`](.env.example)
-lists every variable with its safe default. Set the ones you need in the shell, for example:
+**Settings from `.env`:** `npm run dev`, `npm start` and `docker compose` read a `.env` file in the
+project root when it exists, and start with the defaults when it does not. Create it from
+[`.env.example`](.env.example), which lists every variable with its safe default:
 
 ```bash
-PORT=3001 npm run dev
+cp .env.example .env    # then edit it, for example PORT=3001
+npm run dev
 ```
 
-In Windows PowerShell, set the variable with `$env:PORT=3001; npm run dev` instead.
+A variable already set in the shell wins over `.env`, so `PORT=3001 npm run dev` overrides the file.
+In Windows PowerShell, set it with `$env:PORT=3001; npm run dev` instead.
+
+Under `docker compose`, `.env` is read through `env_file` (Docker Compose v2.24 or later, because the
+file is optional). The `environment:` block in `docker-compose.yml` sets `PORT`, `DB_PATH` and
+`NODE_ENV`, so these override `.env` and the port stays `3000`.
 
 **With Docker only:**
 
@@ -106,6 +112,8 @@ variable on the command line: `docker run -p 3000:3000 -e OPENALEX_MAILTO=<your-
 | `DB_PATH` | `./data/researchpath.db` | SQLite file (`:memory:` in tests). |
 | `NODE_ENV` | `development` | `production` in the Docker image. |
 | `OPENALEX_MAILTO` | empty (optional) | E-mail sent to OpenAlex so requests use its "polite pool" (faster, more reliable) when the news topics are requested. Surrounding spaces are trimmed; leave it empty to omit it. |
+| `TRUST_PROXY_HOPS` | unset: `1` in production, `0` otherwise | Number of proxy hops trusted to read the client IP for the `/api/news/*` rate limit. Raise it only if all users appear to share one IP (check `req.ips` after a deploy). |
+| `RENDER_GIT_COMMIT` | unset | Set by Render at runtime. `/api/health` reports it as `commit` (`null` when unset). Never set it by hand. |
 
 ### Deployment
 
@@ -115,7 +123,9 @@ https://researchpath.onrender.com.
 - **CI** (`.github/workflows/ci.yml`): on pull requests to `develop` and `main` and on pushes to `develop`, it runs lint and
   tests, then builds the `prod` image and smoke-tests `/api/health` in a container.
 - **CD** (`.github/workflows/cd.yml`): on a push to `main`, it publishes the image to GitHub Container
-  Registry (`ghcr.io/pluto2k2/researchpath`) and asks Render to deploy. A `v*` tag publishes a
+  Registry (`ghcr.io/pluto2k2/researchpath`) and asks Render to deploy. The deploy job then waits until
+  the live `/api/health` reports the commit of this run, so it checks that the new commit is live. If the
+  live app reports no commit, it warns and checks the status only. A `v*` tag publishes a
   versioned image (`0.1.0`, `0.2.0`) and does not deploy.
 - Render builds the repository from source. The GHCR image is a versioned artifact, not what Render runs.
 
@@ -145,8 +155,8 @@ team of specialised subagents, under human review at every step.
 - **Skills:** `/mission`, and `/pre-push-review` (review of pending changes before a push).
 - **Scripts:** `scripts/ai-review.sh [base]` runs a headless review with `code-reviewer` (base defaults
   to `develop`). `scripts/new-worktree.sh <branch> [port]` creates a git worktree from `origin/develop`
-  and writes a `.env` with `PORT=<port>` (default 3001), so two missions can run side by side. Nothing
-  loads that `.env` yet, so run the app with `PORT=<port> npm run dev` (see the backlog).
+  and writes a `.env` with `PORT=<port>` (default 3001), so two missions can run side by side. `npm run dev`
+  reads that `.env`, so the worktree runs on its own port.
 - **Guardrails:** `.claude/settings.json` lets agents run tests and lint without asking, asks before
   commits, pushes, merges and `docker compose down`, and denies force-push, `git reset --hard`,
   `rm -rf` and reading `.env`.
@@ -160,11 +170,12 @@ team of specialised subagents, under human review at every step.
 | M05 Status and progress | 212 | 13 |
 | M06 Events and next 30 days | 300 | 16 |
 | M09 Research news | 482 | 23 |
+| M10 Hardening (v0.2.1) | 547 | 30 |
 
 M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAlex) and use a fake clock.
 
 - **Reviews:** M04b's must fix (no popover tests) was fixed with happy-dom tests. M05 had 1 must fix (a corrupted
-  check-mark glyph), fixed and tested; M06 and M07 had no must fix. M09 had 2 must fix and 6 should fix, all fixed.
+  check-mark glyph), fixed and tested; M06 and M07 had no must fix. M09 had 2 must fix and 6 should fix, all fixed. M10 had no must fix and 4 should fix, all fixed.
 - **Dependencies approved by the human:** `@eslint/js` and `globals` (M02), `happy-dom` (M04b), `fast-xml-parser` (M09).
 
 **What worked well**
@@ -184,7 +195,7 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 
 ## Status and next steps
 
-**Version:** v0.2.0.
+**Version:** v0.2.0 released; v0.2.1 in review (M10, not yet tagged).
 
 **Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07) and [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09). Release steps: [`docs/deployment.md`](docs/deployment.md).
 
@@ -200,18 +211,17 @@ M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAle
 | M07 CD and release v0.1.0 | done |
 | M08 Final README | done |
 | M09 US-04 Research news tab (release v0.2.0) | done |
+| M10 Hardening for the public site (release v0.2.1) | in review |
 
 **Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
 
 - **Data loss:** the SQLite data is lost on every redeploy, restart or spin-down.
 - **Cold start:** the free plan spins down when idle, so the first request can take a while.
-- **Deploy check:** the CD health check can pass against the old instance, so a green deploy does not prove the new code runs. CD does not run lint or tests; CI does that on pull requests, which is why tags are made only on commits already on `main`.
-- **Errors:** 4xx body-parser errors return 500 (for example, an oversized body returns 500 instead of 413).
-- **Overdue halo:** a done milestone whose date has passed still shows the coral overdue halo.
+- **Deploy check:** the CD check compares the commit, but when the live app reports `commit: null` (`RENDER_GIT_COMMIT` unset) it falls back to the status check, which can pass on the old instance. Two merges to `main` in quick succession can make the older CD run time out. CD does not run lint or tests; CI does that on pull requests, which is why tags are made only on commits already on `main`.
 - **Time zone:** the server's "today" is the UTC date, while the browser uses local time.
 - **Events:** events cannot be edited or deleted yet.
-- **News:** `/api/news/topics` has no rate limit, and the arXiv request queue is uncapped.
-- **Settings:** `.env` is not loaded automatically (see How to run it).
+- **News:** `/api/news/*` is limited to 30 requests per minute per IP, and the arXiv request queue is uncapped.
+- **Deferred from the M10 review:** Render's proxy hop count is not yet verified (check `req.ips` after a deploy); IPv6 clients are limited per address, so a client can rotate within its /64; a second Ctrl+C is ignored during shutdown.
 - **Audit:** `npm audit` reports 4 moderate warnings in the dev dependencies (ESLint / minimatch).
 
 The full list of items deferred from reviews is in [`docs/missions/README.md`](docs/missions/README.md).

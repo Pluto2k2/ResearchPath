@@ -45,7 +45,7 @@ src/
     milestones.js      # pure functions: validateX(body) -> { value } or { error }
     events.js
   routes/
-    health.js          # GET /api/health
+    health.js          # GET /api/health: { status, version, commit }
     milestones.js      # Express routers: routes -> validation -> db
     events.js
     news.js            # GET /api/news/papers, GET /api/news/topics: route -> validation -> news service
@@ -82,6 +82,10 @@ contain no HTTP logic; validation functions are pure and need no db.
 | `DB_PATH` | `./data/researchpath.db` | SQLite file (`:memory:` in tests) |
 | `NODE_ENV` | `development` | `production` in the Docker image |
 | `OPENALEX_MAILTO` | (empty) | Optional e-mail sent as `mailto` to OpenAlex (polite pool); omitted when empty |
+| `TRUST_PROXY_HOPS` | `1` in production, `0` otherwise | Proxy hops in front of the app, so `req.ip` is the client IP for the news rate limit |
+| `RENDER_GIT_COMMIT` | (set by Render) | Commit reported by `/api/health`; never set by hand |
+
+`npm run dev`, `npm start` and `docker compose` load `.env` when it exists; variables already set in the environment win.
 
 ## Conventions
 
@@ -92,6 +96,8 @@ contain no HTTP logic; validation functions are pure and need no db.
 - Errors always have the shape `{ "error": "<clear message for the user>" }`:
   - `400` invalid input or invalid JSON (`"Invalid JSON"`),
   - `404` unknown id or unknown `/api` route,
+  - `413` request body too large, `415` unsupported charset or encoding; other client errors keep their 4xx status with a fixed message (never the raw error text),
+  - `429` too many requests to `/api/news/*` (30 per minute per IP), with a `Retry-After` header,
   - `500` unexpected error: generic message, never a stack trace or SQL in the response,
   - `502` an external API (arXiv, OpenAlex) failed or timed out: clear message, never the upstream URL or body.
 - External APIs are called only through official APIs (no HTML scraping), with the `fetch` injected into `createApp`; tests mock it and never use the network.
@@ -243,4 +249,4 @@ coordinates the agents and talks to the user, and it does not write application 
 
 - `/pre-push-review`: review of the pending changes before a push.
 - `scripts/ai-review.sh [base]`: headless review of the branch with `code-reviewer`.
-- `scripts/new-worktree.sh <branch> [port]`: a git worktree per mission, to run two missions side by side. It writes `PORT=<port>` to a `.env`, but nothing loads `.env` yet (backlog), so start it with `PORT=<port> npm run dev`.
+- `scripts/new-worktree.sh <branch> [port]`: a git worktree per mission, with its own `.env` (`PORT=<port>`), to run two missions side by side.

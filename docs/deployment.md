@@ -20,10 +20,12 @@ Live app: https://researchpath.onrender.com (Render free plan: it spins down whe
 | `PORT` | Set by Render | Do **not** set it on Render: Render chooses the port and the image reads it. Locally the default is `3000`. |
 | `DB_PATH` | Not set: `/app/data/researchpath.db` | The default. It stays on the container filesystem, so it is not persistent on the free plan (see the warning above). |
 | `OPENALEX_MAILTO` | Empty (optional) | Optional, empty by default. It can be set on Render to use the OpenAlex polite pool. |
+| `RENDER_GIT_COMMIT` | Set by Render | Render sets it at runtime to the commit it builds. `/api/health` reports it as `commit` (`null` when unset), and the CD `deploy` job compares it with the commit of the run. Do **not** set it by hand. |
+| `TRUST_PROXY_HOPS` | Not set: `1` in production | Number of proxy hops trusted to read the client IP for the `/api/news/*` rate limit. The default assumes one hop in front of the app; this is not yet verified on Render, so check `req.ips` after a deploy. Raise it only if all users share one IP. |
 
-The variables and their defaults are listed in `.env.example`. Nothing loads that file automatically
-(no dotenv, no `--env-file`, no `env_file` in `docker-compose.yml`): set the variables in the shell.
-They are read only in `src/config.js`.
+The variables and their defaults are listed in `.env.example`. `npm run dev` and `npm start` read a
+`.env` file when it exists, and `docker compose` reads it through `env_file`. The production image does
+not read `.env`: on Render, set the variables in the dashboard. They are read only in `src/config.js`.
 
 ## How CD works
 
@@ -51,9 +53,14 @@ The workflow is [`.github/workflows/cd.yml`](../.github/workflows/cd.yml), named
    Render builds the repository itself (branch `main`, Docker). The hook only starts that build:
    the GHCR image is a versioned artifact, not what Render runs.
 2. Waits 30 seconds, then calls `GET $APP_URL/api/health` every 10 seconds for up to 15 minutes.
-   `APP_URL` is the repository variable with the service URL. The job fails if the health check
-   does not return `200` in that time. Render builds from source and can cold start, which is why
-   the wait is 15 minutes.
+   `APP_URL` is the repository variable with the service URL. The job succeeds only when the response
+   reports `commit` equal to `GITHUB_SHA`, the commit of this run. Render builds from source and can
+   cold start, which is why the deadline is 15 minutes. Two cases are handled differently:
+   - If the live app reports `"commit": null` (`RENDER_GIT_COMMIT` unset), the job prints a warning and
+     checks only that `status` is `ok`.
+   - If the response has no `commit` key (an app released before v0.2.1), the job keeps waiting until
+     the deadline.
+   If the deadline passes without a match, the job fails.
 
 **Missing settings are a warning, not a failure.** If `RENDER_DEPLOY_HOOK_URL` or `APP_URL` is
 not set, the workflow prints a warning and stays green, and the step is skipped. Check the
@@ -90,7 +97,8 @@ warnings in the run summary after setting up.
 1. **Release pull request:** open a pull request from `develop` to `main`. Wait for the CI checks
    to be green, then merge it. CD publishes the image (`latest` and the SHA) and deploys.
 2. **Check the deploy:** open `$APP_URL/api/health` in a browser or with `curl`. It must return
-   `{"status":"ok"}`. Open the app itself and check that the roadmap loads.
+   `"status":"ok"`, the `version` and, once Render sets `RENDER_GIT_COMMIT`, the `commit` of the merge.
+   Open the app itself and check that the roadmap loads.
 3. **Tag the release** on the merge commit on `main`:
 
    ```bash
@@ -113,11 +121,12 @@ v0.2.0 followed the same release steps: release pull request [#14](https://githu
 
 ## Known limitations
 
-- **The health check can pass on the old instance.** Render keeps the old instance serving during a
-  deploy. The wait in CD can therefore succeed before the new release is live, so a green `deploy`
-  job does not prove that the new code runs. Check the version yourself after a deploy, or see the
-  backlog item in [`docs/missions/README.md`](missions/README.md) (the health endpoint returns the
-  commit SHA, or Render's API is polled for the deploy status).
+- **The health check falls back to the status when the commit is unknown.** The `deploy` job proves
+  that the new commit is live only when the app reports its commit. If `RENDER_GIT_COMMIT` is unset
+  (`commit: null`), the job checks only the status, and Render keeps the old instance serving during a
+  deploy, so that check can pass on the old instance. Check `$APP_URL/api/health` yourself after a deploy.
+- **Two quick merges to `main`.** Render deploys the latest `main`. When two merges land in quick
+  succession, the older CD run waits for a commit that Render never deploys, and times out.
 - **CD does not run lint or tests.** CI does that on pull requests. This is why the tag rule above
   matters.
 - **Free-plan data loss** (see the warning at the top): each redeploy, restart or spin-down erases
