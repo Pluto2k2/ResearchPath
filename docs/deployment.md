@@ -10,7 +10,7 @@ a versioned image and does not deploy.
 > Treat the live app as a **demo**: do not keep real data in it. A paid persistent disk, or a
 > hosted database with accounts (v0.3, US-07), fixes this.
 
-Live app: [TODO: Render service URL, e.g. https://<name>.onrender.com]
+Live app: https://researchpath.onrender.com (Render free plan: it spins down when idle, so the first request can take a while).
 
 ## Production settings
 
@@ -19,8 +19,10 @@ Live app: [TODO: Render service URL, e.g. https://<name>.onrender.com]
 | `NODE_ENV` | `production` | Set in the `prod` stage of the `Dockerfile`. Do not change it on Render. |
 | `PORT` | Set by Render | Do **not** set it on Render: Render chooses the port and the image reads it. Locally the default is `3000`. |
 | `DB_PATH` | Not set: `/app/data/researchpath.db` | The default. It stays on the container filesystem, so it is not persistent on the free plan (see the warning above). |
+| `OPENALEX_MAILTO` | Empty (optional) | Optional, empty by default. It can be set on Render to use the OpenAlex polite pool. |
 
-The variables and their defaults are listed in `.env.example` (for local use: `cp .env.example .env`).
+The variables and their defaults are listed in `.env.example`. Nothing loads that file automatically
+(no dotenv, no `--env-file`, no `env_file` in `docker-compose.yml`): set the variables in the shell.
 They are read only in `src/config.js`.
 
 ## How CD works
@@ -104,6 +106,10 @@ warnings in the run summary after setting up.
 
 **Rule: tag only commits on `main`.** A tag must point to a commit that is already merged into
 `main` through the release pull request. Never tag a branch or a commit from `develop`.
+
+## Release v0.2.0
+
+v0.2.0 followed the same release steps: release pull request [#14](https://github.com/Pluto2k2/ResearchPath/pull/14), then the tag `v0.2.0` on the merge commit on `main`.
 
 ## Known limitations
 
