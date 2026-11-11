@@ -6,7 +6,7 @@
 | **Owner** | Agent (Claude Code) |
 | **Branch** | `chore/bootstrap-skeleton` |
 | **Depends on** | M01 |
-| **Status** | todo |
+| **Status** | in review |
 
 ## Context
 
@@ -17,18 +17,18 @@ Agents: `devops-engineer` (config, Docker, DevContainer), `backend-dev` (`src/`)
 
 ## Acceptance criteria
 
-- [ ] `package.json`: `"type": "module"`, `engines.node` `>=22.13`, scripts `start`, `dev` (`node --watch`), `test` (`vitest run`), `lint` (`eslint .`); dependencies Express 5, dev dependencies Vitest, Supertest, ESLint. `package-lock.json` committed.
-- [ ] `src/config.js` reads `PORT`, `DB_PATH`, `NODE_ENV` with the defaults from `CLAUDE.md`; it is the only file that reads `process.env`.
-- [ ] `src/db/index.js` exports `openDatabase(path)` using `node:sqlite` (creates the parent folder of a file path; `:memory:` works).
-- [ ] `src/app.js` exports `createApp({ db, now })` (`now()` returns a `Date`); `src/server.js` starts it on `PORT` with `now = () => new Date()`.
-- [ ] `GET /api/health` returns `200` with `{ "status": "ok" }`.
-- [ ] Unknown `/api/*` route returns `404` with `{ "error": "Not found" }`; a body with invalid JSON returns `400` with `{ "error": "Invalid JSON" }`; unexpected errors return `500` with `{ "error": "Internal server error" }` (no stack trace).
-- [ ] `public/index.html`, `app.js`, `styles.css` are served at `/`: page title "ResearchPath", a header and an empty responsive layout (usable at 360 px wide).
-- [ ] `tests/helpers.js` exports `TODAY = '2026-11-12'` and a function that returns a Supertest-ready app with a fresh in-memory database and `now()` frozen to `TODAY`.
-- [ ] Tests cover health, unknown route and invalid JSON; `npm run lint` and `npm test` pass.
-- [ ] `.gitignore` (`node_modules/`, `.env`, `data/`, coverage), `.env.example` with every variable.
-- [ ] `Dockerfile` multi-stage (`dev` stage, `prod` last stage: `npm ci --omit=dev`, non-root user, `HEALTHCHECK` on `/api/health`), `.dockerignore`, `docker-compose.yml` with an `app` service (bind mount for development).
-- [ ] `.devcontainer/devcontainer.json` (Node 22, ESLint extension, port 3000 forwarded, `npm install` after create).
+- [x] `package.json`: `"type": "module"`, `engines.node` `>=22.13`, scripts `start`, `dev` (`node --watch`), `test` (`vitest run`), `lint` (`eslint .`); dependencies Express 5, dev dependencies Vitest, Supertest, ESLint. `package-lock.json` committed.
+- [x] `src/config.js` reads `PORT`, `DB_PATH`, `NODE_ENV` with the defaults from `CLAUDE.md`; it is the only file that reads `process.env`.
+- [x] `src/db/index.js` exports `openDatabase(path)` using `node:sqlite` (creates the parent folder of a file path; `:memory:` works).
+- [x] `src/app.js` exports `createApp({ db, now })` (`now()` returns a `Date`); `src/server.js` starts it on `PORT` with `now = () => new Date()`.
+- [x] `GET /api/health` returns `200` with `{ "status": "ok" }`.
+- [x] Unknown `/api/*` route returns `404` with `{ "error": "Not found" }`; a body with invalid JSON returns `400` with `{ "error": "Invalid JSON" }`; unexpected errors return `500` with `{ "error": "Internal server error" }` (no stack trace).
+- [x] `public/index.html`, `app.js`, `styles.css` are served at `/`: page title "ResearchPath", a header and an empty responsive layout (usable at 360 px wide).
+- [x] `tests/helpers.js` exports `TODAY = '2026-11-12'` and a function that returns a Supertest-ready app with a fresh in-memory database and `now()` frozen to `TODAY`.
+- [x] Tests cover health, unknown route and invalid JSON; `npm run lint` and `npm test` pass.
+- [x] `.gitignore` (`node_modules/`, `.env`, `data/`, coverage), `.env.example` with every variable.
+- [x] `Dockerfile` multi-stage (`dev` stage, `prod` last stage: `npm ci --omit=dev`, non-root user, `HEALTHCHECK` on `/api/health`), `.dockerignore`, `docker-compose.yml` with an `app` service (bind mount for development).
+- [x] `.devcontainer/devcontainer.json` (Node 22, ESLint extension, port 3000 forwarded, `npm install` after create).
 
 ## Out of scope
 
@@ -50,9 +50,31 @@ Agents: `devops-engineer` (config, Docker, DevContainer), `backend-dev` (`src/`)
 ## Result (filled by the agent)
 
 - Files changed:
-- Tests added:
+  - `package.json`, `package-lock.json`, `eslint.config.js`, `.gitignore`, `.env.example`
+  - `Dockerfile` (stages: base, dev, deps, prod), `.dockerignore`, `docker-compose.yml`
+  - `.devcontainer/devcontainer.json`
+  - `src/config.js`, `src/db/index.js`, `src/app.js`, `src/server.js`, `src/routes/health.js`
+  - `public/index.html`, `public/app.js`, `public/styles.css`
+  - `tests/helpers.js`, `tests/health.test.js`, `tests/errors.test.js`, `tests/static.test.js`, `tests/config.test.js`, `tests/db.test.js`
+- Tests added: 17 tests in 5 files
+  - `health` + `TODAY` helper: 3
+  - errors (404, 400, 500): 5
+  - static page: 3
+  - config: 4
+  - db: 2
 - Lint / tests / build:
-- Pull request:
+  - `npm run lint`: clean
+  - `npm test`: 17/17 passed
+  - `docker compose config -q`: OK
+  - `docker build --target prod`: OK. The container answers `/api/health` with `{"status":"ok"}`, serves `/`, and runs as user `node`.
+  - Node prints a harmless ExperimentalWarning for `node:sqlite`.
+  - Versions: Node 22.21.0, Express 5.3.0, Vitest 5.1.0, Supertest 7.3.2, ESLint 10.14.0, `@eslint/js` 10.0.1, `globals` 17.14.0. The last two were approved by the user as extra devDependencies for the ESLint flat config.
+- Pull request: [TODO: PR link]
+- Reviewer follow-ups (not applied):
+  - The error handler maps other 4xx body-parser errors (e.g. 413) to 500.
+  - No `res.headersSent` guard in the error handler.
+  - No SIGTERM handling and no `init: true` in Docker, so a container stop waits 10 s.
+  - The HEALTHCHECK hardcodes port 3000, while Render sets `PORT`.
 
 ## Review notes (filled by you)
 
