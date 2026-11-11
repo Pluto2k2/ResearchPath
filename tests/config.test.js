@@ -20,6 +20,16 @@ describe('Configuration', () => {
     expect(loadConfig({ PORT: 'abc' }).port).toBe(3000);
   });
 
+  it('reads OPENALEX_MAILTO and trims it', () => {
+    expect(loadConfig({ OPENALEX_MAILTO: '  me@example.org ' }).openAlexMailto).toBe('me@example.org');
+  });
+
+  it('leaves openAlexMailto undefined when OPENALEX_MAILTO is unset or blank', () => {
+    expect(loadConfig({}).openAlexMailto).toBeUndefined();
+    expect(loadConfig({ OPENALEX_MAILTO: '' }).openAlexMailto).toBeUndefined();
+    expect(loadConfig({ OPENALEX_MAILTO: '   ' }).openAlexMailto).toBeUndefined();
+  });
+
   it('exports a frozen config object', () => {
     expect(Object.isFrozen(config)).toBe(true);
   });
