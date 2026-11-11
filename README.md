@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** v0.2.1 released (M10, hardening). Milestones, status and progress, the next 30 days (v0.1.0) and the research news tab (v0.2.0, M09) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
+> **Status:** v0.3.0 released (M11, Ramy). Milestones, status and progress, the next 30 days (v0.1.0), the research news tab (v0.2.0, M09) and Ramy, your research guide buddy (v0.3.0, M11) are live. Live demo: https://researchpath.onrender.com. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -55,11 +55,11 @@ from OpenAlex for the last 365 days. It is on demand, not a daily digest.
 - `GET /api/news/topics?categories=...&q=...` returns the top 10 OpenAlex topics with their counts.
 - At least one of `categories` or `q` is required. Both endpoints are cached on the server for 30 minutes. When an upstream API fails or times out, the endpoint returns `502` with a message.
 
-**Ramy, your research guide buddy (M11, release v0.3.0, in review):** a mascot standing above the roadmap, with a floating speech bubble.
+**Ramy, your research guide buddy (M11, release v0.3.0):** a mascot standing above the roadmap, with a floating speech bubble.
 His speech bubble says the most useful thing right now: an overdue milestone, a deadline within 7 days, a progress
 step (25, 50, 75 or 100 %), or a tip. Clicking Ramy shows the next message. He reacts to a finished milestone, to an
 empty next-30-days list, and to the Research news tab (loading, errors, hot topics unavailable). Mission:
-[M11](docs/missions/M11-ramy-mascot.md). PR: [TODO: link after push].
+[M11](docs/missions/M11-ramy-mascot.md). PR: [#20](https://github.com/Pluto2k2/ResearchPath/pull/20).
 
 Full scope: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
@@ -177,7 +177,7 @@ team of specialised subagents, under human review at every step.
 | M06 Events and next 30 days | 300 | 16 |
 | M09 Research news | 482 | 23 |
 | M10 Hardening (v0.2.1) | 547 | 30 |
-| M11 Ramy mascot (v0.3.0) | 638 | 33 |
+| M11 Ramy mascot (v0.3.0) | 648 | 33 |
 
 M03 and M07 added no tests. The M09 tests mock the upstream APIs (arXiv, OpenAlex) and use a fake clock.
 
@@ -204,9 +204,9 @@ The Ramy sprite sheet was created by me with an AI image generator.
 
 ## Status and next steps
 
-**Version:** v0.2.1.
+**Version:** v0.3.0.
 
-**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07), [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09) and [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) (M10). Release steps: [`docs/deployment.md`](docs/deployment.md).
+**Releases:** [v0.1.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.1.0) (M04 to M07), [v0.2.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.0) (M09), [v0.2.1](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.2.1) (M10) and [v0.3.0](https://github.com/Pluto2k2/ResearchPath/releases/tag/v0.3.0) (M11). Release steps: [`docs/deployment.md`](docs/deployment.md).
 
 | Mission | Status |
 |---|---|
@@ -221,7 +221,7 @@ The Ramy sprite sheet was created by me with an AI image generator.
 | M08 Final README | done |
 | M09 US-04 Research news tab (release v0.2.0) | done |
 | M10 Hardening for the public site (release v0.2.1) | done |
-| M11 Ramy, your research guide buddy (release v0.3.0) | in review |
+| M11 Ramy, your research guide buddy (release v0.3.0) | done |
 
 **Known limits:** the app is deployed on Render's free plan, which has no persistent disk. The live app is a demo: keep real data on a local or Docker install until a persistent disk or accounts (later) arrive.
 
