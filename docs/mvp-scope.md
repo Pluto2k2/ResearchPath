@@ -20,11 +20,22 @@ The student adds their first milestones and immediately sees their research laid
 | US-03 | **As a** PhD student, **I want** to add conferences, seminars, submission deadlines and funding calls, and see everything due in the next 30 days with my milestones, **so that** I never miss a date. | MVP |
 | US-04 | **As a** PhD student, **I want** a daily digest of new papers on my topics (from arXiv / OpenAlex), **so that** I keep up with my field without searching every day. | In scope (v0.2.0, M09) |
 | US-05 | **As a** PhD student, **I want** a board of events and opportunities (funding, positions, visibility) picked by my interests, **so that** I find chances I would otherwise miss. | Backlog (v0.2) |
-| US-06 | **As a** PhD student, **I want** to share a paper draft with peers I invite and be notified when they leave feedback, **so that** I get feedback in days, not weeks. | Backlog (v0.3, needs accounts) |
-| US-07 | **As a** PhD student, **I want** my own account, **so that** my roadmap is private and available on any device. | Backlog (v0.3) |
+| US-06 | **As a** PhD student, **I want** to share a paper draft with peers I invite and be notified when they leave feedback, **so that** I get feedback in days, not weeks. | Backlog (later, needs accounts) |
+| US-07 | **As a** PhD student, **I want** my own account, **so that** my roadmap is private and available on any device. | Backlog (later) |
+| US-08 | **As a** PhD student, **I want** Ramy to email me a short reminder of what matters (overdue milestones, deadlines this week), **so that** I don't miss a date even when I don't open the app. | Backlog (needs US-07 accounts) |
 
 Note on US-04: v0.2.0 (M09) delivers an on-demand Research news tab (latest papers + hot topics
 from arXiv and OpenAlex), not a daily digest.
+
+### US-08 design note (no code yet)
+
+US-08 is a design note only: nothing in this story is built.
+
+- **Depends on US-07:** a reminder is sent to a student's own address, so it needs accounts first.
+- **Opt-in:** email is off by default. The student turns it on, and can unsubscribe at any time.
+- **Daily job:** a Render cron job runs once a day. The free web service spins down when idle, so it cannot run a schedule itself. The job reuses the pure `ramyMessage` function (`public/ramy.js`, see M11) and the upcoming query (the milestones and events due in the next 30 days) to build the reminder.
+- **Secrets:** the email provider API key is set in environment variables only. `src/config.js` reads it (it is the only file that reads `process.env`), and it never appears in the code.
+- **Unsubscribe:** every email contains an unsubscribe link.
 
 ## 3. Initial prompt for Claude
 
