@@ -1,0 +1,12 @@
+node_modules
+.git
+.github
+.devcontainer
+.claude
+.env
+data
+coverage
+docs
+tests
+scripts
+*.md

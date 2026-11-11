@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint *)",
+      "Bash(docker compose run --rm app npm test)",
+      "Bash(docker compose run --rm app npm test *)",
+      "Bash(docker compose run --rm app npm run lint)",
+      "Bash(docker compose config *)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git switch *)",
+      "Bash(git pull)",
+      "Bash(git add *)"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git merge *)",
+      "Bash(docker compose down *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
