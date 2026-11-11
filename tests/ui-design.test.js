@@ -146,10 +146,9 @@ describe('AC4 - cards and top bar', () => {
       expect(header).toMatch(/<button[^>]*id="header-add"[^>]*>\s*\+ Milestone\s*<\/button>/);
     });
 
-    it('links to #progress-section and still has no #upcoming link', () => {
+    it('links to #progress-section and to #upcoming-section', () => {
       expect(header).toMatch(/<a[^>]*href="#progress-section"[^>]*>\s*Progress\s*<\/a>/);
-      expect(header).not.toContain('href="#upcoming"');
-      expect(header).not.toMatch(/Upcoming/);
+      expect(header).toMatch(/<a[^>]*href="#upcoming-section"[^>]*>\s*Upcoming\s*<\/a>/);
     });
 
     it('styles the header as sticky with a 2px solid bottom border', () => {
