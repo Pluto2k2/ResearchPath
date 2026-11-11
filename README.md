@@ -32,6 +32,13 @@ laptop or phone; accounts come later.
 | US-06 | As a PhD student, I want to share a paper draft with peers I invite and be notified when they leave feedback, so that I get feedback in days, not weeks. | Backlog (v0.3, needs accounts) | — |
 | US-07 | As a PhD student, I want my own account, so that my roadmap is private and available on any device. | Backlog (v0.3) | — |
 
+**Status and progress (US-02, M05):** each milestone has a status (`todo`, `doing`, `done`, `blocked`),
+set from the milestone's detail popover on the roadmap. Each node shows its status shape and name,
+and the Progress section shows "X of Y milestones done (Z%)" with the count per status.
+
+- `PATCH /api/milestones/:id/status` with `{ "status": "<value>" }` returns the updated milestone. An unknown status returns `400`, an unknown or non-numeric id returns `404`.
+- `GET /api/progress` returns `{ total, done, percent, byStatus }`; `percent` is `done / total * 100`, rounded, and `0` with no milestones.
+
 Full scope: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
 ## How to run it
