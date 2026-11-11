@@ -15,4 +15,8 @@ export default [
     files: ['public/**/*.js'],
     languageOptions: { globals: globals.browser },
   },
+  {
+    files: ['tests/**/*.dom.test.js'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
 ];
