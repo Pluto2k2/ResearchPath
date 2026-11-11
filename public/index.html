@@ -12,6 +12,28 @@
       <h1>ResearchPath</h1>
       <p class="tagline">Your PhD roadmap, and every date that matters.</p>
     </header>
-    <main class="site-main" id="app"></main>
+    <main class="site-main" id="app">
+      <section class="card" aria-labelledby="add-heading">
+        <h2 id="add-heading">Add a milestone</h2>
+        <form id="milestone-form" novalidate>
+          <label for="milestone-title">Title</label>
+          <input id="milestone-title" name="title" type="text" autocomplete="off" />
+
+          <label for="milestone-date">Target date</label>
+          <input id="milestone-date" name="targetDate" type="date" />
+
+          <label for="milestone-notes">Notes</label>
+          <textarea id="milestone-notes" name="notes" rows="3"></textarea>
+
+          <p id="milestone-error" class="form-error" role="alert"></p>
+          <button type="submit">Add milestone</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="roadmap-heading">
+        <h2 id="roadmap-heading">Roadmap</h2>
+        <ol id="roadmap" class="timeline"></ol>
+      </section>
+    </main>
   </body>
 </html>
