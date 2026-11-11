@@ -1,4 +1,5 @@
 import { formatShortDate, isOverdue, relativeLabel } from './dates.js';
+import { STATUS_LABELS, STATUS_VALUES, statusClass, statusLabel } from './status.js';
 import {
   MID,
   computeGap,
@@ -124,10 +125,60 @@ function getDetailPopover() {
   const relative = el('span', 'popover-relative');
   meta.append(date, relative);
   const notes = el('p', 'popover-notes');
-  root.append(closeButton, title, meta, notes);
+  const statusLabelEl = el('label', 'popover-status-label', 'Status');
+  statusLabelEl.htmlFor = 'detail-status';
+  const select = el('select', 'popover-status');
+  select.id = 'detail-status';
+  for (const value of STATUS_VALUES) {
+    const option = el('option', undefined, STATUS_LABELS[value]);
+    option.value = value;
+    select.append(option);
+  }
+  root.append(closeButton, title, meta, notes, statusLabelEl, select);
   document.body.append(root);
-  detail = { root, title, date, relative, notes, controller: bindPopover(root, closeButton) };
+  detail = {
+    root,
+    title,
+    date,
+    relative,
+    notes,
+    select,
+    milestone: null,
+    controller: bindPopover(root, closeButton),
+  };
+  select.addEventListener('change', () => onStatusChange(detail));
   return detail;
+}
+
+let statusHandler = null;
+
+async function onStatusChange(d) {
+  const previous = d.milestone.status;
+  const wanted = d.select.value;
+  if (wanted === previous || !statusHandler) return;
+  d.select.disabled = true;
+  let updated;
+  try {
+    updated = await statusHandler(d.milestone.id, wanted);
+  } catch {
+    updated = null;
+  }
+  // On failure the caller showed the error; the previous status stays displayed.
+  if (!updated) d.select.value = d.milestone.status;
+  d.select.disabled = false;
+  if (d.controller.isOpen() && !d.root.contains(document.activeElement)) d.select.focus();
+}
+
+function fillDetail(d, milestone, today) {
+  d.milestone = milestone;
+  d.title.textContent = milestone.title;
+  d.date.textContent = milestone.targetDate;
+  d.relative.textContent = relativeLabel(milestone.targetDate, today);
+  d.relative.classList.toggle('is-overdue', isOverdue(milestone.targetDate, today));
+  const hasNotes = typeof milestone.notes === 'string' && milestone.notes !== '';
+  d.notes.textContent = hasNotes ? milestone.notes : '';
+  d.notes.hidden = !hasNotes;
+  d.select.value = STATUS_VALUES.includes(milestone.status) ? milestone.status : 'todo';
 }
 
 function showDetail(milestone, today, trigger) {
@@ -136,13 +187,7 @@ function showDetail(milestone, today, trigger) {
     d.controller.close();
     return;
   }
-  d.title.textContent = milestone.title;
-  d.date.textContent = milestone.targetDate;
-  d.relative.textContent = relativeLabel(milestone.targetDate, today);
-  d.relative.classList.toggle('is-overdue', isOverdue(milestone.targetDate, today));
-  const hasNotes = typeof milestone.notes === 'string' && milestone.notes !== '';
-  d.notes.textContent = hasNotes ? milestone.notes : '';
-  d.notes.hidden = !hasNotes;
+  fillDetail(d, milestone, today);
   d.controller.open(trigger);
 }
 
@@ -173,17 +218,20 @@ function buildMilestoneNode(milestone, i, gap, today) {
   const overdue = isOverdue(milestone.targetDate, today);
   const button = el('button', `node-btn${overdue ? ' is-overdue' : ''}`);
   button.type = 'button';
-  button.setAttribute('aria-label', `${milestone.title}, ${short}, ${rel}`);
+  button.setAttribute('aria-label', `${milestone.title}, ${short}, ${rel}, ${statusLabel(milestone.status)}`);
   placeNode(button, nodeX(i, gap), gap, i);
 
   const label = el('span', `node-label ${labelSide(i)}`);
   label.setAttribute('aria-hidden', 'true');
+  // The status sits on the relative line: a 4th line would crowd the neighbouring labels.
+  const relLine = el('span', 'node-rel', rel);
+  relLine.append(el('span', 'node-status', ` · ${statusLabel(milestone.status)}`));
   label.append(
     el('span', 'node-date', short),
     el('span', 'node-title', milestone.title),
-    el('span', 'node-rel', rel),
+    relLine,
   );
-  button.append(el('span', 'node-shape'), label);
+  button.append(el('span', `node-shape ${statusClass(milestone.status)}`), label);
   return button;
 }
 
@@ -207,7 +255,9 @@ function buildTodayMarker(index, gap) {
 }
 
 export function renderRoadmap(container, milestones, today, handlers) {
-  if (detail) detail.controller.close({ restoreFocus: false });
+  statusHandler = handlers.onStatus ?? null;
+  // An open detail popover survives a redraw (e.g. after a status change).
+  const openId = detail?.controller.isOpen() ? detail.milestone?.id : null;
   container.replaceChildren();
   const visible = container.clientWidth;
   const count = milestones.length;
@@ -223,13 +273,20 @@ export function renderRoadmap(container, milestones, today, handlers) {
 
   const index = todayIndex(milestones, today);
   if (count > 0) track.append(buildTodayMarker(index, gap));
+  let reopened = false;
   milestones.forEach((m, i) => {
     const node = buildMilestoneNode(m, i, gap, today);
     node.addEventListener('click', () => showDetail(m, today, node));
     track.append(node);
+    if (m.id === openId) {
+      fillDetail(detail, m, today);
+      detail.controller.setTrigger(node);
+      reopened = true;
+    }
   });
   track.append(buildAddNode(count, gap, handlers));
   container.append(track);
+  if (openId !== null && openId !== undefined && !reopened) detail.controller.close({ restoreFocus: false });
 
   container.scrollLeft = initialScrollLeft(todayX(index, gap), visible, width);
 }

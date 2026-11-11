@@ -146,9 +146,10 @@ describe('AC4 - cards and top bar', () => {
       expect(header).toMatch(/<button[^>]*id="header-add"[^>]*>\s*\+ Milestone\s*<\/button>/);
     });
 
-    it('does not link to #progress or #upcoming before those sections exist', () => {
-      expect(header).not.toContain('href="#progress"');
+    it('links to #progress-section and still has no #upcoming link', () => {
+      expect(header).toMatch(/<a[^>]*href="#progress-section"[^>]*>\s*Progress\s*<\/a>/);
       expect(header).not.toContain('href="#upcoming"');
+      expect(header).not.toMatch(/Upcoming/);
     });
 
     it('styles the header as sticky with a 2px solid bottom border', () => {
@@ -241,5 +242,14 @@ describe('AC11 - motion and accessibility', () => {
   it('renders nodes as real buttons with an aria-label', () => {
     expect(sources['roadmap.js']).toMatch(/(createElement|\bel)\(\s*'button'/);
     expect(sources['roadmap.js']).toContain('aria-label');
+  });
+});
+
+describe('US-02 - status shapes in styles.css', () => {
+  it('draws the done check as a real check mark, not corrupted bytes', () => {
+    const css = sources['styles.css'];
+    const rule = [...css.matchAll(/\.node-shape\.status-done::after[^{]*\{([^}]*)\}/g)].map((m) => m[1]).join('\n');
+    expect(rule).toMatch(/content:\s*"(?:\\2713|✓)"/);
+    expect(css).not.toMatch(/�|â\u009c|âœ/);
   });
 });

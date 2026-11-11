@@ -8,6 +8,19 @@ function isRealDate(text) {
   return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
 }
 
+export const STATUSES = ['todo', 'doing', 'done', 'blocked'];
+
+export function validateStatus(body) {
+  if (body === null || typeof body !== 'object' || Array.isArray(body)) {
+    return { error: 'Request body must be a JSON object' };
+  }
+  const status = typeof body.status === 'string' ? body.status.trim() : '';
+  if (!STATUSES.includes(status)) {
+    return { error: `Status must be one of: ${STATUSES.join(', ')}` };
+  }
+  return { value: { status } };
+}
+
 export function validateMilestone(body) {
   if (body === null || typeof body !== 'object' || Array.isArray(body)) {
     return { error: 'Request body must be a JSON object' };

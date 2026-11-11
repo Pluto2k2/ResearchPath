@@ -13,6 +13,7 @@
       <nav aria-label="Sections" class="site-nav">
         <ul>
           <li><a href="#roadmap-section">Roadmap</a></li>
+          <li><a href="#progress-section">Progress</a></li>
         </ul>
       </nav>
       <button type="button" id="header-add" class="primary header-add">+ Milestone</button>
@@ -30,7 +31,21 @@
         <div id="roadmap" class="roadmap"></div>
       </section>
 
-      <div class="content"></div>
+      <div class="content">
+        <section id="progress-section" class="card" aria-labelledby="progress-heading">
+          <h2 id="progress-heading">Progress</h2>
+          <p id="progress-text" class="progress-text">0 of 0 milestones done (0%)</p>
+          <div id="progress-bar" class="progress-bar" role="progressbar" aria-labelledby="progress-heading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <ul class="progress-counts">
+          <li><span class="status-shape status-todo" aria-hidden="true"></span><span class="progress-status-name">To do</span> <span class="progress-count" id="progress-count-todo">0</span></li>
+          <li><span class="status-shape status-doing" aria-hidden="true"></span><span class="progress-status-name">In progress</span> <span class="progress-count" id="progress-count-doing">0</span></li>
+          <li><span class="status-shape status-done" aria-hidden="true"></span><span class="progress-status-name">Done</span> <span class="progress-count" id="progress-count-done">0</span></li>
+          <li><span class="status-shape status-blocked" aria-hidden="true"></span><span class="progress-status-name">Blocked</span> <span class="progress-count" id="progress-count-blocked">0</span></li>
+          </ul>
+        </section>
+      </div>
     </main>
 
     <div id="add-popover" class="popover card" role="dialog" aria-labelledby="add-heading" tabindex="-1" hidden>
