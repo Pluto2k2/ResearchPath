@@ -90,6 +90,6 @@ Agents: `devops-engineer` (npm scripts, compose, CD workflow, version), `backend
 
 ## Review notes (filled by you)
 
-- What I checked: [TODO: what you checked yourself]
-- What I asked the agent to change: [TODO: changes you asked for, if any]
-- What was hard / what I learned: [TODO: what was hard and what you learned]
+- What I checked: `.env` is loaded, `/api/health` reports the commit, the news rate limit works, and CD waits until the new commit is live.
+- What I asked the agent to change: One mission to resolve the follow-ups collected in earlier reviews (M02, M04, M05).
+- What was hard / what I learned: Small review findings accumulate quickly; a dedicated hardening mission keeps them under control before they reach users.

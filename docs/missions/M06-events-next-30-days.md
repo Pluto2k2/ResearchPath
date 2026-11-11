@@ -63,7 +63,7 @@ with my milestones, so that I never miss a date.* "Today" is derived from the in
   - `tests/events.test.js`: 51 tests.
   - `tests/upcoming.test.js`: 21 tests.
   - `tests/upcoming.dom.test.js`: 21 tests.
-- Lint / tests / build: `npm run lint` clean; `npm test`: 16 files, 300 tests passed. [TODO: CI result after push]
+- Lint / tests / build: `npm run lint` clean; `npm test`: 16 files, 300 tests passed. CI green on PR #9 (`lint-and-test` and `docker-build`, required by the ruleset).
 - Pull request: [#9](https://github.com/Pluto2k2/ResearchPath/pull/9); released in v0.1.0 ([#10](https://github.com/Pluto2k2/ResearchPath/pull/10))
 - Decisions:
   - "Today" on the server is the UTC date of the injected `now()`.
@@ -77,6 +77,6 @@ with my milestones, so that I never miss a date.* "Today" is derived from the in
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: Adding each event type, the order of the next-30-days list, and that event links open safely.
+- What I asked the agent to change: Keep the "+ Event" button in the "Next 30 days" card (decision recorded above).
+- What was hard / what I learned: Dates and time zones: the server uses the UTC date while the browser uses local time; this is listed in the README's known limits.

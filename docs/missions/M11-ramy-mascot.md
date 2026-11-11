@@ -108,6 +108,6 @@ Agents: `devops-engineer` (version 0.3.0 only), `frontend-dev`, `test-writer`, `
 
 ## Review notes (filled by you)
 
-- What I checked: [TODO: your review]
-- What I asked the agent to change: [TODO: your review]
-- What was hard / what I learned: [TODO: your experience]
+- What I checked: Ramy's messages (empty roadmap, deadline within 7 days, celebration on done, the news states), a narrow window and reduced motion.
+- What I asked the agent to change: Move Ramy above the roadmap with a floating speech bubble.
+- What was hard / what I learned: Keeping Ramy's logic in a pure function (`ramyMessage`) made it easy to test and reusable for the planned email reminders (US-08).

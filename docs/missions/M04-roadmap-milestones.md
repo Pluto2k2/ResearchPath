@@ -62,6 +62,6 @@ This is the minimum moment of value of the MVP. Agents: `backend-dev`, `frontend
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: Creating milestones in the browser, the validation messages, and the API tests.
+- What I asked the agent to change: Popover tests with happy-dom; should-fix items 1 to 3 applied, item 4 moved to the backlog.
+- What was hard / what I learned: Reference files I had copied into the repository polluted the working tree, and the agent removed 19 stray copies. I now start every mission from a clean `git status`.

@@ -78,6 +78,6 @@ Agents: `devops-engineer` (config, Docker, DevContainer), `backend-dev` (`src/`)
 
 ## Review notes (filled by you)
 
-- What I checked:
-- What I asked the agent to change:
-- What was hard / what I learned:
+- What I checked: The dev and prod Docker images, `/api/health` in the browser, and the first passing tests.
+- What I asked the agent to change: Move the review follow-ups (SIGTERM handling, `headersSent` guard, 4xx body-parser errors) to the backlog; they were fixed in M10.
+- What was hard / what I learned: Running Docker on Windows: `docker build` needs the build context (`.`), and port 8080 was already in use, so I used 8081. `node:sqlite` prints an ExperimentalWarning, hidden in M07.
