@@ -1,40 +1,59 @@
-import { daysLabel, localToday } from './dates.js';
+import { localToday } from './dates.js';
+import { bindPopover, renderRoadmap } from './roadmap.js';
 
 const GENERIC_ERROR = 'Something went wrong. Please try again.';
+const NETWORK_ERROR = 'Network error. Check your connection and try again.';
+const RESIZE_DELAY_MS = 150;
 
 const form = document.querySelector('#milestone-form');
 const errorBox = document.querySelector('#milestone-error');
 const roadmap = document.querySelector('#roadmap');
+const addPopover = document.getElementById('add-popover');
 const submitButton = form.querySelector('button[type="submit"]');
+const addPopoverController = bindPopover(
+  addPopover,
+  addPopover.querySelector('.popover-close'),
+  { fallback: () => roadmap.querySelector('.add-node') },
+);
 
-function el(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
+const headerAdd = document.querySelector('#header-add');
+let milestones = [];
+let openedBy = null;
+let lastWidth = 0;
+
+function draw() {
+  lastWidth = roadmap.clientWidth;
+  const wasOpen = addPopoverController.isOpen();
+  renderRoadmap(roadmap, milestones, localToday(new Date()), {
+    onAdd: toggleAdd,
+  });
+  // The "+" was rebuilt: keep an open add popover attached to the new one
+  // (unless it was opened from the header button, which is never rebuilt).
+  if (wasOpen && openedBy !== headerAdd) {
+    openedBy = roadmap.querySelector('.add-node');
+    addPopoverController.setTrigger(openedBy);
+  }
 }
 
-function renderMilestone(m, today) {
-  const li = el('li', 'timeline-item');
-  li.append(el('h3', 'timeline-title', m.title));
-  const meta = el('p', 'timeline-meta');
-  meta.append(el('time', 'timeline-date', m.targetDate));
-  meta.append(el('span', 'timeline-days', daysLabel(m.targetDate, today)));
-  li.append(meta);
-  if (m.notes !== null && m.notes !== undefined && m.notes !== '') {
-    li.append(el('p', 'timeline-notes', m.notes));
+function toggleAdd(trigger) {
+  if (addPopoverController.isOpenFor(trigger)) addPopoverController.close();
+  else {
+    openedBy = trigger;
+    addPopoverController.open(trigger);
   }
-  return li;
 }
 
-function renderRoadmap(milestones) {
-  roadmap.replaceChildren();
-  if (milestones.length === 0) {
-    roadmap.append(el('li', 'timeline-empty', 'No milestones yet. Add your first one above.'));
-    return;
-  }
-  const today = localToday(new Date());
-  for (const m of milestones) roadmap.append(renderMilestone(m, today));
+// Focus goes back to whichever control opened the popover.
+function focusOpener() {
+  const target = openedBy?.isConnected ? openedBy : roadmap.querySelector('.add-node');
+  target?.focus();
+}
+
+// Closes the popover (so the message at the top is visible) and puts focus back on "+".
+function failSubmit(message) {
+  errorBox.textContent = message;
+  addPopoverController.close();
+  focusOpener();
 }
 
 async function readError(res) {
@@ -50,7 +69,8 @@ async function loadRoadmap() {
   try {
     const res = await fetch('/api/milestones');
     if (!res.ok) throw new Error(await readError(res));
-    renderRoadmap(await res.json());
+    milestones = await res.json();
+    draw();
     errorBox.textContent = '';
   } catch (err) {
     errorBox.textContent = err.message || GENERIC_ERROR;
@@ -74,17 +94,31 @@ async function onSubmit(event) {
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
-      errorBox.textContent = await readError(res);
+      // The typed values stay in the form for the next try.
+      failSubmit(await readError(res));
       return;
     }
+    addPopoverController.close();
     form.reset();
     await loadRoadmap();
+    focusOpener();
   } catch {
-    errorBox.textContent = GENERIC_ERROR;
+    // fetch itself threw (offline): same handling as an API error.
+    failSubmit(NETWORK_ERROR);
   } finally {
     submitButton.disabled = false;
   }
 }
 
+// Debounced, and only on width change: phone browsers fire resize when the URL bar hides.
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (roadmap.clientWidth !== lastWidth) draw();
+  }, RESIZE_DELAY_MS);
+});
+
+headerAdd.addEventListener('click', () => toggleAdd(headerAdd));
 form.addEventListener('submit', onSubmit);
 loadRoadmap();
