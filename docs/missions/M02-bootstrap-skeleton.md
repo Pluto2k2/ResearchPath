@@ -74,7 +74,7 @@ Agents: `devops-engineer` (config, Docker, DevContainer), `backend-dev` (`src/`)
   - The error handler maps other 4xx body-parser errors (e.g. 413) to 500.
   - No `res.headersSent` guard in the error handler.
   - No SIGTERM handling and no `init: true` in Docker, so a container stop waits 10 s.
-  - The HEALTHCHECK hardcodes port 3000, while Render sets `PORT`.
+  - The HEALTHCHECK hardcodes port 3000, while Render sets `PORT`. (fixed in M07)
 
 ## Review notes (filled by you)
 
