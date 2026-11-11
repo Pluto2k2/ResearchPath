@@ -3,7 +3,7 @@
 An interactive research roadmap for PhD students: your milestones, your progress, and
 everything due in the next 30 days, in one place.
 
-> **Status:** MVP in progress. Milestones, status and progress, and the next 30 days are built; M06 is in review. See [Status and next steps](#status-and-next-steps).
+> **Status:** MVP in progress. Milestones, status and progress, and the next 30 days are built; M06 and M07 (deployment and release v0.1.0) are in review. See [Status and next steps](#status-and-next-steps).
 
 ## What it is
 
@@ -73,6 +73,13 @@ docker run -p 3000:3000 researchpath
 **Environment variables:** `PORT` (default `3000`), `DB_PATH` (default `./data/researchpath.db`),
 `NODE_ENV`. See `.env.example`.
 
+### Deployment
+
+The app runs as a Docker image on Render's free plan. A merge to `main` publishes the image to
+GitHub Container Registry and triggers a Render deploy; a `v*` tag publishes a versioned image.
+Set-up steps, production settings and the release steps are in [`docs/deployment.md`](docs/deployment.md).
+The free plan has no persistent disk: the live app is a demo, and its data is lost on every redeploy.
+
 ## How it was built with AI
 
 ResearchPath is built with [Claude Code](https://claude.com/claude-code) working as a small
@@ -96,12 +103,12 @@ team of specialised subagents, under human review at every step.
 | M04 US-01 Roadmap with milestones | done |
 | M05 US-02 Status and progress | done |
 | M06 US-03 Events and next 30 days | in review |
-| M07 CD and release v0.1.0 | todo |
+| M07 CD and release v0.1.0 | in review |
 | M08 Final README | todo |
 
 **Known limits:** the app will be deployed on Render's free plan, which has no persistent disk:
 the SQLite data is lost on every redeploy, restart or spin-down. The live app is a demo; keep
 real data on a local or Docker install until a persistent disk or accounts (v0.3) arrive.
 
-**Next:** review and merge M06, then M07, continuous deployment and release v0.1.0.
+**Next:** review and merge M06 and M07 (continuous deployment and release v0.1.0, see [`docs/deployment.md`](docs/deployment.md)), then M08, the final README.
 After v0.1.0: the backlog stories for v0.2 (paper digest, opportunities board).
