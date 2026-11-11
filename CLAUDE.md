@@ -7,9 +7,11 @@ Guidance for Claude Code (and every subagent) working in this repository.
 **ResearchPath** is a web app for PhD students in their first years. It shows an interactive
 roadmap of their research milestones, their overall progress, and everything due in the next
 30 days: milestones plus the conferences, seminars, submission deadlines and funding calls they
-add. The goal: they see where they stand and never miss a date.
+add. The goal: they see where they stand and never miss a date. A second tab, "Research news"
+(v0.2.0, US-04), shows the latest arXiv papers and the hot OpenAlex topics for the interests
+they pick.
 
-- One user, no accounts in the MVP (accounts are backlog, US-07).
+- One user, no accounts yet (accounts are backlog, US-07). News interests live in `localStorage`.
 - Scope and user stories: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 - Work plan: [`docs/missions/README.md`](docs/missions/README.md).
 
@@ -28,14 +30,12 @@ add. The goal: they see where they stand and never miss a date.
 
 Do not add a dependency (npm package, framework, ORM, CSS library) without asking first.
 
-## Planned architecture
-
-None of this exists yet. Mission M02 creates the skeleton.
+## Architecture
 
 ```
 src/
   server.js            # entry point: reads config, opens the db, calls createApp, listen()
-  app.js               # createApp({ db, now }) -> Express app (no listen, used by tests)
+  app.js               # createApp({ db, now, fetch, wait, openAlexMailto }) -> Express app (no listen, used by tests)
   config.js            # the ONLY file that reads process.env
   db/
     index.js           # openDatabase(path): opens SQLite, creates tables (CREATE TABLE IF NOT EXISTS)
@@ -48,9 +48,18 @@ src/
     health.js          # GET /api/health
     milestones.js      # Express routers: routes -> validation -> db
     events.js
+    news.js            # GET /api/news/papers, GET /api/news/topics: route -> validation -> news service
+  news/
+    service.js         # createNewsService: per-app 30 min cache + 3 s arXiv spacing
+    arxiv.js           # arXiv API URL + Atom parsing (fast-xml-parser)
+    openalex.js        # OpenAlex works API URL + group_by parsing
+    cache.js, rate-limit.js, http.js, errors.js
 public/
   index.html           # single page, served statically by Express
   app.js               # ES module: fetch wrapper, rendering, forms
+  router.js            # hash tabs: #/roadmap (default), #/news
+  interests.js         # news interests in localStorage
+  news.js              # Research news tab
   styles.css           # responsive layout (phone first)
 tests/
   helpers.js           # fresh in-memory db + clock frozen to TODAY = '2026-11-12' for each test
@@ -72,6 +81,7 @@ contain no HTTP logic; validation functions are pure and need no db.
 | `PORT` | `3000` | HTTP port |
 | `DB_PATH` | `./data/researchpath.db` | SQLite file (`:memory:` in tests) |
 | `NODE_ENV` | `development` | `production` in the Docker image |
+| `OPENALEX_MAILTO` | (empty) | Optional e-mail sent as `mailto` to OpenAlex (polite pool); omitted when empty |
 
 ## Conventions
 
@@ -82,7 +92,9 @@ contain no HTTP logic; validation functions are pure and need no db.
 - Errors always have the shape `{ "error": "<clear message for the user>" }`:
   - `400` invalid input or invalid JSON (`"Invalid JSON"`),
   - `404` unknown id or unknown `/api` route,
-  - `500` unexpected error: generic message, never a stack trace or SQL in the response.
+  - `500` unexpected error: generic message, never a stack trace or SQL in the response,
+  - `502` an external API (arXiv, OpenAlex) failed or timed out: clear message, never the upstream URL or body.
+- External APIs are called only through official APIs (no HTML scraping), with the `fetch` injected into `createApp`; tests mock it and never use the network.
 - Success codes: `201` + the created object for POST, `200` for GET/PATCH, `204` for DELETE.
 - Express 5 forwards errors thrown in async handlers to the error middleware: don't wrap handlers in try/catch just to call `next(err)`.
 
@@ -101,7 +113,7 @@ contain no HTTP logic; validation functions are pure and need no db.
 
 ### Dates and "today"
 
-- `createApp({ db, now })` receives `now`, a function returning the current time as a `Date` (`() => new Date()` in `src/server.js`).
+- `createApp({ db, now, ... })` receives `now`, a function returning the current time as a `Date` (`() => new Date()` in `src/server.js`).
 - Routes never call `new Date()` to get the current time: they call the injected `now()` and derive today's `YYYY-MM-DD` from it.
 - Tests freeze the clock with `TODAY = '2026-11-12'` from `tests/helpers.js`, so date-based tests never depend on the day they run.
 
@@ -146,6 +158,7 @@ These rules apply to every UI mission. M05 and M06 follow them.
 - Left: "ResearchPath" in Pixelify Sans, left-aligned, no logo.
 - Right: section links that smooth-scroll to their section (smooth scrolling off under `prefers-reduced-motion`), then a coral "+ Milestone" button with navy text that opens the add popover.
 - Links are "Roadmap", "Progress", "Upcoming". A link is added only when its section exists.
+- Tabs "Roadmap" and "Research news" (hash routing, `aria-current="page"` on the active one) sit after the brand. On the news tab the section links and "+ Milestone" are hidden.
 - On phones the links scroll horizontally.
 - Status shapes (used from M05):
   - `todo`: hollow navy square.

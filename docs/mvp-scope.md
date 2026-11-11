@@ -18,10 +18,13 @@ The student adds their first milestones and immediately sees their research laid
 | US-01 | **As a** PhD student, **I want** to build my research roadmap with milestones (title, target date, notes), **so that** I see my whole path at a glance. | MVP |
 | US-02 | **As a** PhD student, **I want** to update each milestone's status (to do, in progress, done, blocked) and see my overall progress, **so that** my roadmap shows where I really stand. | MVP |
 | US-03 | **As a** PhD student, **I want** to add conferences, seminars, submission deadlines and funding calls, and see everything due in the next 30 days with my milestones, **so that** I never miss a date. | MVP |
-| US-04 | **As a** PhD student, **I want** a daily digest of new papers on my topics (from arXiv / OpenAlex), **so that** I keep up with my field without searching every day. | Backlog (v0.2) |
+| US-04 | **As a** PhD student, **I want** a daily digest of new papers on my topics (from arXiv / OpenAlex), **so that** I keep up with my field without searching every day. | In scope (v0.2.0, M09) |
 | US-05 | **As a** PhD student, **I want** a board of events and opportunities (funding, positions, visibility) picked by my interests, **so that** I find chances I would otherwise miss. | Backlog (v0.2) |
 | US-06 | **As a** PhD student, **I want** to share a paper draft with peers I invite and be notified when they leave feedback, **so that** I get feedback in days, not weeks. | Backlog (v0.3, needs accounts) |
 | US-07 | **As a** PhD student, **I want** my own account, **so that** my roadmap is private and available on any device. | Backlog (v0.3) |
+
+Note on US-04: v0.2.0 (M09) delivers an on-demand Research news tab (latest papers + hot topics
+from arXiv and OpenAlex), not a daily digest.
 
 ## 3. Initial prompt for Claude
 
