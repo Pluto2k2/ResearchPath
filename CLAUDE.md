@@ -123,6 +123,67 @@ contain no HTTP logic; validation functions are pure and need no db.
 - File names in kebab-case; no TypeScript.
 - Comments explain *why*, not *what*.
 
+## UI design rules
+
+These rules apply to every UI mission. M05 and M06 follow them.
+
+### Colours and fonts
+
+- Palette only: navy `#102542` (text, lines, borders, shadows, hero band), grey-blue `#cdd7d6` (page background), coral `#f87060` (accent).
+- Cards use one lighter tint of grey-blue: `#e6ebea`.
+- Coral marks: buttons, progress bar, done part of the path, TODAY marker, in-progress, blocked and overdue markers.
+- Other tints are allowed only as transparency (`rgba`) of these three colours. No white, never purple or any other hue.
+- Never use coral for small text on a light background (about 1.9:1). Use coral as a fill with navy text on it (about 5.5:1), or as text on navy.
+- Overdue dates: bold navy text with a coral halo or marker. Error messages: navy text with a coral marker.
+- Focus rings: navy on light backgrounds, `#cdd7d6` on navy.
+- Pixelify Sans is used for the brand, headings, dates, numbers and buttons. The exception is the hero headline, which uses `system-ui`, bold, for readability. Pixelify Sans is self-hosted in `public/fonts/` with its OFL licence, weights 400, 600 and 700, woff2 format. No external font or font URL.
+- Body text uses `system-ui`.
+
+### Style
+
+- Cards (popovers, Progress and Upcoming sections; not the roadmap band) have a 2px navy border, a 10px radius, a hard 4px navy offset shadow (`box-shadow: 4px 4px 0 #102542`) and a `#e6ebea` background.
+- Nav bar: sticky, full width, light background (`#cdd7d6`), navy text, 2px navy bottom border.
+- Left: "ResearchPath" in Pixelify Sans, left-aligned, no logo.
+- Right: section links that smooth-scroll to their section (smooth scrolling off under `prefers-reduced-motion`), then a coral "+ Milestone" button with navy text that opens the add popover.
+- Links are "Roadmap", "Progress", "Upcoming". A link is added only when its section exists.
+- On phones the links scroll horizontally.
+- Status shapes (used from M05):
+  - `todo`: hollow navy square.
+  - `doing` (in progress): square half-filled coral.
+  - `done`: navy square with a check.
+  - `blocked`: coral square with a navy "!".
+
+### Layout
+
+- Hero first on the page: a full-width navy band (`#102542`), centred, with generous space.
+- Headline in `system-ui`, bold, `font-size: clamp(2.2rem, 6vw, 4.5rem)`: "Your PhD roadmap," in `#cdd7d6`, then "and every deadline on the way." in coral.
+- Subtitle under the headline, in `system-ui`, `#cdd7d6` at 80% opacity: "Plan your milestones, track your progress, never miss a conference or funding date."
+- Roadmap is a full-bleed band across the whole page width, with 2px navy borders top and bottom. It is not a card; the wavy path uses the full width.
+- Progress and Upcoming go below the roadmap, in a centred container of max 1280px.
+
+### Roadmap
+
+- A wavy SVG path. Milestones sit on its crests and troughs, in date order.
+- Labels alternate above and below the path. Each shows a short date (like "12 Nov"), the title, and "in N days", "today" or "N days overdue".
+- A TODAY marker sits between past and future milestones.
+- Overdue milestones get a coral halo. Their date and relative label are bold navy text with a coral underline.
+- Spacing fits the band. The path scrolls horizontally when needed, starting with TODAY in view.
+- Empty state: "Start your path".
+
+### Interactions
+
+- A "+" node at the end of the path opens a popover form to add a milestone.
+- Clicking a milestone opens a popover with its details.
+- Esc, an outside click or the × control closes a popover. Focus returns to the element that opened it.
+- API errors are shown at the top of the page.
+
+### Motion and accessibility
+
+- Small pop and hover animations, disabled under `prefers-reduced-motion`.
+- Visible keyboard focus with `:focus-visible`.
+- Interactive nodes are real `button` elements with an `aria-label`.
+- User data is rendered with `textContent` or `createElement` only.
+
 ## Working rules
 
 1. **Plan first.** Explain the plan and the files you will touch, then wait for approval before writing code. One mission at a time.
