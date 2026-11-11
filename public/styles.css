@@ -135,6 +135,7 @@ html {
 }
 
 #roadmap-section,
+#progress-section,
 .content {
   scroll-margin-top: 4.5rem;
 }
@@ -408,6 +409,101 @@ h2 {
   border-bottom: 3px solid var(--accent);
 }
 
+/* ---- Status shapes (roadmap nodes and progress counts) ---- */
+
+.node-shape.status-doing,
+.status-shape.status-doing {
+  background: linear-gradient(to right, var(--accent) 50%, var(--bg) 50%);
+}
+
+.node-shape.status-done,
+.status-shape.status-done {
+  background: var(--navy);
+  color: var(--bg);
+}
+
+.node-shape.status-blocked,
+.status-shape.status-blocked {
+  background: var(--accent);
+  color: var(--navy);
+}
+
+.node-shape.status-done::after,
+.status-shape.status-done::after {
+  content: "\2713";
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.node-shape.status-blocked::after,
+.status-shape.status-blocked::after {
+  content: "!";
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.status-shape {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--surface);
+  border: 3px solid var(--ink);
+}
+
+.node-status {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ---- Progress card ---- */
+
+.progress-text {
+  margin: 0 0 0.75rem;
+  font-family: var(--pixel-font);
+  font-size: 1.2rem;
+}
+
+.progress-bar {
+  height: 1.5rem;
+  background: var(--ink-faint);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s steps(6);
+}
+
+.progress-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-counts li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-count {
+  font-family: var(--pixel-font);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
 /* ---- Popovers ---- */
 
 .popover {
@@ -479,6 +575,29 @@ h2 {
   display: none;
 }
 
+.popover-status-label {
+  display: block;
+  margin: 0.75rem 0 0.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.popover-status {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+.popover-status:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 /* ---- Form ---- */
 
 form label {
@@ -546,6 +665,10 @@ button.primary:disabled {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .progress-fill {
+    transition: none;
   }
 
   .node-shape,

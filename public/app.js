@@ -1,5 +1,6 @@
 import { localToday } from './dates.js';
 import { bindPopover, renderRoadmap } from './roadmap.js';
+import { STATUS_VALUES } from './status.js';
 
 const GENERIC_ERROR = 'Something went wrong. Please try again.';
 const NETWORK_ERROR = 'Network error. Check your connection and try again.';
@@ -26,6 +27,7 @@ function draw() {
   const wasOpen = addPopoverController.isOpen();
   renderRoadmap(roadmap, milestones, localToday(new Date()), {
     onAdd: toggleAdd,
+    onStatus: changeStatus,
   });
   // The "+" was rebuilt: keep an open add popover attached to the new one
   // (unless it was opened from the header button, which is never rebuilt).
@@ -65,6 +67,80 @@ async function readError(res) {
   }
 }
 
+const progressText = document.querySelector('#progress-text');
+const progressBar = document.querySelector('#progress-bar');
+const progressFill = document.querySelector('#progress-fill');
+
+function isCount(n) {
+  return Number.isInteger(n) && n >= 0;
+}
+
+function renderProgress(p) {
+  const ok =
+    p &&
+    isCount(p.total) &&
+    isCount(p.done) &&
+    typeof p.percent === 'number' &&
+    p.percent >= 0 &&
+    p.percent <= 100 &&
+    p.byStatus &&
+    STATUS_VALUES.every((s) => isCount(p.byStatus[s]));
+  if (!ok) throw new Error(GENERIC_ERROR);
+  progressText.textContent = `${p.done} of ${p.total} milestones done (${p.percent}%)`;
+  progressBar.setAttribute('aria-valuenow', String(p.percent));
+  progressFill.style.width = `${p.percent}%`;
+  for (const status of STATUS_VALUES) {
+    document.querySelector(`#progress-count-${status}`).textContent = String(p.byStatus[status]);
+  }
+}
+
+// Never throws: a progress problem must not break the rest of the page.
+let progressRequest = 0;
+
+async function loadProgress() {
+  // Only the latest request may update the page: an older, slower answer is dropped.
+  const mine = ++progressRequest;
+  try {
+    const res = await fetch('/api/progress');
+    if (!res.ok) throw new Error(await readError(res));
+    const data = await res.json();
+    if (mine === progressRequest) renderProgress(data);
+  } catch (err) {
+    if (mine !== progressRequest) return;
+    errorBox.textContent = err instanceof TypeError ? NETWORK_ERROR : err.message || GENERIC_ERROR;
+  }
+}
+
+// The popover is far from the message at the top, so scroll it into view.
+function showError(message) {
+  errorBox.textContent = message;
+  if (typeof errorBox.scrollIntoView === 'function') errorBox.scrollIntoView({ block: 'nearest' });
+}
+
+// Returns the updated milestone, or null after showing the error (status stays unchanged).
+async function changeStatus(id, status) {
+  errorBox.textContent = '';
+  try {
+    const res = await fetch(`/api/milestones/${encodeURIComponent(id)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    if (!res.ok) {
+      showError(await readError(res));
+      return null;
+    }
+    const updated = await res.json();
+    milestones = milestones.map((m) => (m.id === updated.id ? updated : m));
+    draw();
+    await loadProgress();
+    return updated;
+  } catch {
+    showError(NETWORK_ERROR);
+    return null;
+  }
+}
+
 async function loadRoadmap() {
   try {
     const res = await fetch('/api/milestones');
@@ -101,6 +177,7 @@ async function onSubmit(event) {
     addPopoverController.close();
     form.reset();
     await loadRoadmap();
+    loadProgress();
     focusOpener();
   } catch {
     // fetch itself threw (offline): same handling as an API error.
@@ -122,3 +199,4 @@ window.addEventListener('resize', () => {
 headerAdd.addEventListener('click', () => toggleAdd(headerAdd));
 form.addEventListener('submit', onSubmit);
 loadRoadmap();
+loadProgress();
