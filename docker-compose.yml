@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      PORT: "3000"
+      DB_PATH: ./data/researchpath.db
+      NODE_ENV: development

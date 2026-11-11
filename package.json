@@ -1,0 +1,26 @@
+{
+  "name": "researchpath",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Roadmap and 30-day agenda for PhD students",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "supertest": "^7.3.2",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,64 @@
+:root {
+  --color-bg: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-text: #1f2430;
+  --color-muted: #5d6578;
+  --color-primary: #2f5bea;
+  --color-primary-contrast: #ffffff;
+  --color-border: #dde1ea;
+  --space: 1rem;
+  --max-width: 60rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow-wrap: break-word;
+}
+
+.site-header {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  padding: var(--space);
+}
+
+.site-header > *,
+.site-main {
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.tagline {
+  margin: 0.25rem auto 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.site-main {
+  padding: var(--space);
+}
+
+@media (min-width: 48rem) {
+  .site-header,
+  .site-main {
+    padding: 1.5rem 2rem;
+  }
+
+  .site-header h1 {
+    font-size: 2rem;
+  }
+}
