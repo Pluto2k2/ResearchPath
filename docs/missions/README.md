@@ -18,7 +18,7 @@ New missions follow [`_template.md`](_template.md).
 | M04b | [Wavy roadmap UI, pixel font and palette](M04b-ui-polish.md) | US-01 | `feature/ui-polish` | M04 | frontend, test, docs, devops | done |
 | M05 | [Milestone status and overall progress](M05-milestone-status-progress.md) | US-02 | `feature/milestone-status-progress` | M04 | backend, frontend, test | done |
 | M06 | [Events and the next 30 days](M06-events-next-30-days.md) | US-03 | `feature/events-next-30-days` | M05 | backend, frontend, test | in review |
-| M07 | [Continuous deployment and release v0.1.0](M07-cd-release.md) | — | `ci/cd-release` | M06 | devops | todo |
+| M07 | [Continuous deployment and release v0.1.0](M07-cd-release.md) | — | `ci/cd-release` | M06 | devops | in review |
 | M08 | [Final README](M08-final-readme.md) | — | `docs/final-readme` | M07 | docs | todo |
 
 Every mission also goes through `mission-planner`, `code-reviewer` and `docs-writer`
@@ -29,7 +29,9 @@ Every mission also goes through `mission-planner`, `code-reviewer` and `docs-wri
 US-04 daily paper digest, US-05 events and opportunities board (v0.2); US-06 draft sharing
 with peers, US-07 accounts (v0.3). See [`docs/mvp-scope.md`](../mvp-scope.md).
 
-Body-parser `entity.too.large` returns 500 instead of 413 (found in M04 review).
+Body-parser `entity.too.large` returns 500 instead of 413 (found in M04 review; the M02 review flagged the same for every 4xx body-parser error).
+
+Deferred from the M02 review: no `res.headersSent` guard in the error handler; no SIGTERM handling and no `init: true` in Docker, so a container stop waits 10 s.
 
 npm audit: 4 moderate warnings from minimatch inside ESLint 10 (dev only); the forced fix downgrades ESLint to 9 (found in M04b).
 
@@ -40,3 +42,5 @@ A done milestone whose date has passed still shows the coral overdue halo (found
 Deferred from the M05 review: ids with leading zeros (e.g. 007) are accepted; aria-valuetext on the progress bar; no-op .map in countMilestonesByStatus; focus falls to body if Esc is pressed while a status change is pending.
 
 Deferred from the M06 review: `rel="noopener noreferrer"` on event links; a comment explaining why the client `isSafeUrl` is case-insensitive while the server check is case-sensitive; move the 30-day date arithmetic from `src/routes/upcoming.js` into a shared, tested helper; pass `'done'` as a `?` parameter in `listOpenMilestonesUntil`; `loadUpcoming` keeps a stale error message after a successful refresh; align the server's UTC "today" with the browser's local date; editing and deleting events (out of M06 scope).
+
+Deferred from the M07 review: the deploy health check can pass against the old Render instance (zero-downtime keeps it serving), so it does not prove the new release is live; fix: `/api/health` returns the commit SHA and CD compares it with `GITHUB_SHA`, or Render's API is polled for the deploy status. CD does not run lint or tests (rule for now: tag only commits already on `main`); GitHub Actions build cache in `docker/build-push-action`; a comment next to the Dockerfile `CMD` explaining `--disable-warning=ExperimentalWarning`.
