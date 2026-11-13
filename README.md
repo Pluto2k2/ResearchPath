@@ -270,7 +270,7 @@ speech bubble.
 - Use `/clear` between missions: a stale session gave me wrong advice.
 - Release order matters: release PR #10 reached `main` before M07, so CD was missing until PR #12.
 - Repository secrets and environment secrets are not the same thing.
-- Always verify agent claims: the `.env` loading claim was wrong, and review caught a wrong README line.
+- Always verify agent claims:review caught a wrong README line.
 
 ## Status and next steps
 
